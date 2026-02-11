@@ -17,35 +17,125 @@ int main()
 	return 0;
 }
 
+//Q1
+int loopCounter;
+int customers;
+int drinkNum;
+char drinkType;
+int sandType;
+int sandNum;
+int bill = 0, one = 1, three = 3, five = 5, two = 2;
+
+void readData() {
+    cout << "How many drinks? ";
+    cin >> drinkNum;
+    cout << "What kind of drink(S=Soda, W=Water)? ";
+    cin >> drinkType;
+    cout << "How many sandwiches? ";
+    cin >> sandNum;
+    cout << "What size of sandwich (10/12 inches)? ";
+    cin >> sandType;
+}
+
+void totalBill() {
+    cout << endl;
+    cout << "Bill: " << bill << endl;
+}
+
+//Q1 int main()
 void main1()
 {
-	//Question 1
-	int customers;
-	int drinks;
-	char kindOfDrink;
-	int sandwiches;
-	int sandwichesSize;
-	int bill;
-	
-	cout << "----------------------7-11 Convenient Store ----------------------" << endl;
-	cout << "Drinks" << endl;
-	cout << "  Soda(S)…………………………………………….…$2" << endl;
-	cout << "  Water(W)………………………………………….…$1" << endl;
-	cout << "Sandwiches" << endl;
-	cout << "  10 inches……………………………………………..$3" << endl;
-	cout << "  12 inches……………………………………………..$5" << endl;
 
-	cout << "Enter the number of customers" << endl;
-	cin >> customers;
-	cout << "How many drinks?" << endl;
-	cin >> drinks;
-	cout << "What kind of drink(S=Soda, W=Water)?" << endl;
-	cin >> kindOfDrink;
-	cout << "How many sandwiches?" << endl;
-	cin >> sandwiches;
-	cout << "What size of sandwich (10/12 inches)?" << endl;
-	cin >> sandwichesSize;
-	cout << "Your total bill= " << bill << endl;
+    cout << setfill('-') << setw(10) << " " << "7-11 Convenient Store" << " " << setfill('-') << setw(10) << endl;
+    cout << "Drinks" << endl;
+    cout << "Soda(S)....................$2" << endl;
+    cout << "Water(W)....................$1" << endl;
+    cout << "Sandwiches" << endl;
+    cout << "10 inches....................$3" << endl;
+    cout << "12 inches....................$5" << endl;
+
+    cout << "Enter the number of customers: ";
+    cin >> customers;
+
+    _asm {
+
+        //Input: 1 customer, 1 drink, w or s,  1 sandwich, 10 o4 12 inches
+
+    storeLoop:
+        cmp customers, 0;
+        je done;
+        call readData;
+        mov bill, 0;
+        cmp drinkType, 'W';
+        je itIsWater;
+        cmp drinkType, 'S';
+        je itIsSoda;
+
+        //water
+    itIsWater:
+        cmp sandType, 10;
+        je itIs10; //jump to itis10 if it is water and 10 inches
+
+        //water and 12 inches
+
+        mov eax, drinkNum; //if its 12, put 1 into eax for 1 drink
+        imul eax, one; //multiply 1 times 1 bc 1 water and it costs a dollar(one)
+        mov bill, eax; // move the drink cost, so 1, into bill. bill = 1
+        mov eax, sandNum; // move 1, sandnum, into eax
+        imul eax, five; //multiply sandnum by the cost of a sandwich 12 inch, so in this case its 5
+        add bill, eax; //we add 5 to the bill. so now the bill is 5+1=6
+        //eax has the bill
+        call totalBill;
+        dec customers;
+        jmp storeLoop;
+
+    itIs10:
+        //water and 10 inches
+        mov eax, drinkNum; // if its 10, put 1 into eax for 1 drink
+        imul eax, one; //multiply 1 times 1 bc 1 water costs a dollar(one)
+        mov bill, eax; //bill=1
+        mov eax, sandNum; // mov 1, sandnum, into eax
+        imul eax, three; // multiply sandnum by the cost of a 10 inch sandwich, in this case its 3
+        add bill, eax; // we add 3 to the bill so now its 3+1=4
+        call totalBill;
+        dec customers;
+        jmp storeLoop;
+
+
+        //soda
+    itIsSoda:
+        cmp sandType, 10;
+        je itIs10Soda; //jump to itis10 if it is soda and 10 inches
+
+        //soda and 12 inches
+
+        mov eax, drinkNum; //if its 12 inches, put 1 into eax for 1 drink
+        imul eax, two; //multiply 1 times 2 bc one soda and it costs two dolla(two)
+        mov bill, eax; // move the drink cost, so 2, into bill. bill = 2
+        mov eax, sandNum; // move 1, sandnum, into eax
+        imul eax, five; //multiply sandnum by the cost of a sandwich 12 inch, so in this case its 5
+        add bill, eax; //we add 5 to the bill. so now the bill is 5+2=7
+        call totalBill;
+        dec customers;
+        jmp storeLoop;
+
+    itIs10Soda:
+        //water and 10 inches
+        mov eax, drinkNum; // if its 10, put 1 into eax for 1 drink
+        imul eax, two; //multiply 1 times 2 bc 1 soda and it cost two dollars (two)
+        mov bill, eax; //bill=2
+        mov eax, sandNum; // mov 1, sandnum, into eax
+        imul eax, three; // multiply sandnum by the cost of a 10 inch sandwich, in this case its 3
+        add bill, eax; // we add 3 to the bill so now its 3+2=5
+        call totalBill;
+        dec customers;
+        jmp storeLoop;
+
+
+    done:
+      
+    }
+    return 0;
 }
 
 void main4()
