@@ -17,7 +17,7 @@ int main()
 	return 0;
 }
 
-//Q1
+//For Q1
 int loopCounter;
 int customers;
 int drinkNum;
@@ -42,11 +42,12 @@ void totalBill() {
     cout << "Bill: " << bill << endl;
 }
 
-//Q1 int main()
 void main1()
 {
-
-    cout << setfill('-') << setw(10) << " " << "7-11 Convenient Store" << " " << setfill('-') << setw(10) << endl;
+	//Question 1
+    cout << setfill('-') << setw(10) << ""
+     << "7-11 Convenient Store"
+     << setw(10) << "" << endl;
     cout << "Drinks" << endl;
     cout << "Soda(S)....................$2" << endl;
     cout << "Water(W)....................$1" << endl;
@@ -58,9 +59,6 @@ void main1()
     cin >> customers;
 
     _asm {
-
-        //Input: 1 customer, 1 drink, w or s,  1 sandwich, 10 o4 12 inches
-
     storeLoop:
         cmp customers, 0;
         je done;
@@ -100,15 +98,13 @@ void main1()
         call totalBill;
         dec customers;
         jmp storeLoop;
-
-
+	
         //soda
     itIsSoda:
         cmp sandType, 10;
         je itIs10Soda; //jump to itis10 if it is soda and 10 inches
 
         //soda and 12 inches
-
         mov eax, drinkNum; //if its 12 inches, put 1 into eax for 1 drink
         imul eax, two; //multiply 1 times 2 bc one soda and it costs two dolla(two)
         mov bill, eax; // move the drink cost, so 2, into bill. bill = 2
@@ -130,10 +126,45 @@ void main1()
         call totalBill;
         dec customers;
         jmp storeLoop;
+	
+    done:
+    }
+    return 0;
+}
 
+//Q2
+short scoreCtr = 0;
+int avg;
+int total;
+int score;
+
+void readDataQ2() {
+    cout << "Enter a score (-1) to stop: ";
+    cin >> score;
+    cout << endl;
+}
+
+void calcAvg() {
+    avg = total / scoreCtr;
+    cout << "Your average is: " << avg << endl;
+}
+
+void main2() {
+	//Question 2
+    cout << "Let's compute your score's average: ";
+
+    _asm {
+    scoreLoop:
+        call readDataQ2;
+        cmp score, -1;
+        je done;
+        mov eax, score;
+        add total, eax;
+        inc scoreCtr;
+        jmp scoreLoop;
 
     done:
-      
+        call calcAvg;
     }
     return 0;
 }
