@@ -1,14 +1,23 @@
 #include <iostream>
-
 using namespace std;
 
+void main1();
+void main2();
+void main3();
+void main4();
 
-
-//used in question 4
-#include <iostream>
-using namespace std;
 
 int main()
+{
+	main1();
+	main2();
+	main3();
+	main4();
+
+	return 0;
+}
+
+void main1()
 {
 	//Question 1
 	int customers;
@@ -37,13 +46,10 @@ int main()
 	cout << "What size of sandwich (10/12 inches)?" << endl;
 	cin >> sandwichesSize;
 	cout << "Your total bill= " << bill << endl;
+}
 
-
-
-	//Question 2
-
-	//Question 3
-
+void main4()
+{
 	//Question 4
 	short numOfPrinters= 0;
 	short numOfFloppyDrives = 0;
@@ -95,5 +101,4 @@ int main()
 	cout << numOfFloppyDrives << endl;
 	cout << sizeOfRam << endl;
 	
-	return 0;
 }
