@@ -157,7 +157,7 @@ int main2() {
         cmp score, -1;
         je done;			//if -1 is entered, jump to done
         mov eax, score;		//eax=score
-        add total, eax;		//total=score1+score2…etc. as it loops
+        add total, eax;		//total=total+score
         inc scoreCtr;		//scoreCtr++
         jmp scoreLoop;		//repeat loop
 
