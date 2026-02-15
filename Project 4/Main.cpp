@@ -6,13 +6,14 @@ void main1();
 void main2();
 void main3();
 void main4();
+void main5();
 
 
 int main()
 {
 	main1();
 
-	//main2();
+	main2();
 	//main3();
 
 	cout << endl << endl << "Problem 4" << endl;
@@ -152,7 +153,7 @@ void calcAvg() {
 
 void main2() {
     //Question 2
-    cout << "Let's compute your score's average: ";
+    cout << "Let's compute your score's average " << endl;
 
     _asm {
     scoreLoop:
@@ -220,4 +221,69 @@ void main4()
 	cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
 	cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
 	
+}
+
+//for Q4 p2
+char c;
+
+void isEven()
+{
+    cout << "BEEF is even" << endl;
+}
+
+void isOdd()
+{
+    cout << "BEEF is odd" << endl;
+}
+
+void readChar()
+{
+    c = cin.get();
+}
+
+void main5()
+{
+    short totalDigit;
+
+    //cout << "Enter a four word PIN: ";
+
+    _asm 
+    {
+        mov cx, 0;
+
+        mov ax, 0xBEEF;
+        and ax, 0xF000;
+        shr ax, 12;
+        add cx, ax;
+
+        mov ax, 0xBEEF;
+        and ax, 0x0F00;
+        shr ax, 8;
+        add cx, ax;
+
+        mov ax, 0xBEEF;
+        and ax, 0x00F0;
+        shr ax, 4;
+        add cx, ax;
+
+        mov ax, 0xBEEF;
+        and ax, 0x000F;
+        add cx, ax;
+
+        mov bx, 2;
+
+        mov ax, cx;
+        cdq;
+        idiv bx;
+        
+        cmp dx, 0;
+        je isEven;
+        call isOdd;
+
+    isEven:
+        call isEven;
+
+
+
+    }
 }
