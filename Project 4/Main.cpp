@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 void main1();
@@ -45,7 +46,7 @@ void totalBill() {
     cout << "Bill: " << bill << endl;
 }
 
-int main1()
+void main1()
 {
     //Question 1
     cout << setfill('-') << setw(10) << ""
@@ -130,7 +131,6 @@ int main1()
 
     done:
     }
-    return 0;
 }
 
 //For Q2
@@ -150,7 +150,7 @@ void calcAvg() {
     cout << "Your average is: " << avg << endl;
 }
 
-int main2() {
+void main2() {
     //Question 2
     cout << "Let's compute your score's average: ";
 
@@ -167,7 +167,6 @@ int main2() {
     done:
         call calcAvg;
     }
-    return 0;
 }
 
 void main4()
