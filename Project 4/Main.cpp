@@ -2,27 +2,23 @@
 #include <iomanip>
 using namespace std;
 
-void main1();
-void main2();
-void main3();
-void main4();
-void main5();
-
+int main1();
+int main2();
+int main3();
+int main4();
+int main5();
 
 int main()
 {
-	main1();
+    main1();
+    main2();
+    main3();
+    main4();
 
-	main2();
-	//main3();
-
-	cout << endl << endl << "Problem 4" << endl;
-	main4();
-
-	return 0;
+    return 0;
 }
 
-//For Q1
+//Question 1
 int loopCounter;
 int customers;
 int drinkNum;
@@ -47,9 +43,8 @@ void totalBill() {
     cout << "Bill: " << bill << endl;
 }
 
-void main1()
+int main1()
 {
-    //Question 1
     cout << setfill('-') << setw(10) << ""
         << "7-11 Convenient Store"
         << setw(10) << "" << endl;
@@ -133,8 +128,9 @@ void main1()
     done:
     }
 }
+//Q1 DONE
 
-//For Q2
+//Question 2
 int scoreCtr = 0;
 int avg;
 int total = 0;
@@ -151,28 +147,90 @@ void calcAvg() {
     cout << "Your average is: " << avg << endl;
 }
 
-void main2() {
-    //Question 2
+int main2() {
     cout << "Let's compute your score's average " << endl;
 
     _asm {
     scoreLoop:
         call readDataQ2;
         cmp score, -1;
-        je done;			//if -1 is entered, jump to done
+        je checkZero;       //if the user enters -1, check if nothing else was entered
+                            //before calculating the average.
         mov eax, score;		//eax=score
         add total, eax;		//total=total+score
         inc scoreCtr;		//scoreCtr++
         jmp scoreLoop;		//repeat loop
 
-    done:
-        call calcAvg;
+    checkZero:
+        cmp scoreCtr, 0;    //check if the user entered any scores before typing -1
+        je skipAvg;         //if not, skip the division to prevent a crash
+        call calcAvg;       //otherwise, calculate the average
+
+    skipAvg:
     }
 }
+//Q2 DONE
 
-void main4()
+//Question 3
+char c;
+int upperCount = 0;
+int lowerCount = 0;
+
+void readCharacter() {
+    c = cin.get();        //gets one character
+}
+
+int main3() {
+    //this clears the buffer in case the enter key is stuck in the buffer from Q2,
+    //which will result in Q3 not running.
+    _asm {
+    clearBuffer:
+        call readCharacter;
+        mov al, c;
+        cmp al, 10;       //10 is the ASCII for the enter key
+        jne clearBuffer;
+    }
+
+    cout << "Enter a sentence: ";
+
+    _asm {
+    charLoop:
+        call readCharacter;
+        mov al, c;           //al=c
+        cmp al, '\n';
+        je done;             //jump to done if c is the enter key
+
+        //Here we will check if the character is between uppercase A-Z
+        cmp al, 'A';
+        jl checkLower;       //if ASCII value of c < ASCII value of A, it is
+        					 //not uppercase, so jump to check if it is lowercase.
+        cmp al, 'Z';
+        jg checkLower;       //if c is > Z, it is not uppercase, so jump to checkLower
+        inc upperCount;      //otherwise, it is uppercase A-Z, so increment upperCount
+        jmp charLoop;        //get the next character
+
+    checkLower:
+        //Here we will check if the character is between lowercase a-z
+        cmp al, 'a';
+        jl charLoop;         //if c < 'a', then c is not a letter, so get the next character
+        cmp al, 'z';
+        jg charLoop;         //if c > 'z', it is not a letter, so get next char
+        inc lowerCount;      //otherwise, it is a lowercase letter, so increment lowerCount
+        jmp charLoop;        //get the next character
+
+    done:
+    }
+
+    cout << "No. of uppercase letters = " << upperCount << endl;
+    cout << "No. of lowercase letters = " << lowerCount << endl;
+
+    return 0;
+}
+//Q3 DONE
+
+//Question 4 Part 1:
+int main4()
 {
-	//Question 4
 	short numOfPrinters= 0;
 	short numOfFloppyDrives = 0;
 	short sizeOfRam =0;
@@ -184,8 +242,6 @@ void main4()
 		and ax, bx;					//ax = 1100 1110 1001 1100 AND 1100 0000 0000 0000
 		shr ax, 14;					//ax = 1100 0000 0000 0000 shifted to 0000 0000 0000 0011
 		mov numOfPrinters, ax;		//numOfPrinters = 0000 0000 0000 0011 = 3
-
-
 
 		//number of floppy drives
 		mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
@@ -223,7 +279,7 @@ void main4()
 	
 }
 
-//for Q4 p2
+//Question 4 Part 2:
 char c;
 
 void isEven()
@@ -241,7 +297,7 @@ void readChar()
     c = cin.get();
 }
 
-void main5()
+int main5()
 {
     short totalDigit;
 
@@ -287,3 +343,4 @@ void main5()
 
     }
 }
+//Q4 DONE
