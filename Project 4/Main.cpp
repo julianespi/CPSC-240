@@ -285,6 +285,7 @@ int main4() {
 
 
 //I still have to add comments for this part
+
 //Question 4 Part 2:
     void isEven()
     {
@@ -296,7 +297,7 @@ int main4() {
         cout << " is not a valid ID for the family" << endl;
     }
 
-    void checkPIN(unsigned short pin, const char* name)
+    void checkPIN(short pin, string name)
     {
         short totalDigit;
 
