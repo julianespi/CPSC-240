@@ -284,60 +284,70 @@ int main4() {
 
 
 
-
+//I still have to add comments for this part
 //Question 4 Part 2:
-
-void isEven()
-{
-    cout << "BEEF is even" << endl;
-}
-
-void isOdd()
-{
-    cout << "BEEF is odd" << endl;
-}
-
-int main5()
-{
-    short totalDigit;
-
-    //cout << "Enter a four word PIN: ";
-
-    _asm
+    void isEven()
     {
-        mov cx, 0;
-
-        mov ax, 0xBEEF;
-        and ax, 0xF000;
-        shr ax, 12;
-        add cx, ax;
-
-        mov ax, 0xBEEF;
-        and ax, 0x0F00;
-        shr ax, 8;
-        add cx, ax;
-
-        mov ax, 0xBEEF;
-        and ax, 0x00F0;
-        shr ax, 4;
-        add cx, ax;
-
-        mov ax, 0xBEEF;
-        and ax, 0x000F;
-        add cx, ax;
-
-        mov bx, 2;
-
-        mov ax, cx;
-        cdq;
-        idiv bx;
-
-        cmp dx, 0;
-        je iseven;
-        call isOdd;
-
-    iseven:
-        call isEven;
+        cout << " is a valid ID for the family" << endl;
     }
-}
-//Q4 DONE
+
+    void isOdd()
+    {
+        cout << " is not a valid ID for the family" << endl;
+    }
+
+    void checkPIN(unsigned short pin, const char* name)
+    {
+        short totalDigit;
+
+        cout << name;
+
+        _asm
+        {
+            mov cx, 0
+
+            mov ax, pin
+            and ax, 0xF000
+            shr ax, 12
+            add cx, ax
+
+            mov ax, pin
+            and ax, 0x0F00
+            shr ax, 8
+            add cx, ax
+
+            mov ax, pin
+            and ax, 0x00F0
+            shr ax, 4
+            add cx, ax
+
+            mov ax, pin
+            and ax, 0x000F
+            add cx, ax
+
+            mov bx, 2
+            mov ax, cx
+            cwd
+            idiv bx
+
+            cmp dx, 0
+            je even_label
+            call isOdd
+            jmp done
+
+            even_label :
+            call isEven
+
+                done :
+        }
+    }
+
+    int main5()
+    {
+        checkPIN(0xBEEF, "BEEF");
+        checkPIN(0xFADE, "FADE");
+        checkPIN(0xCABE, "CABE");
+
+        return 0;
+    }
+    //Q4 DONE
