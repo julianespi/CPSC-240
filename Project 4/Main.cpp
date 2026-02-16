@@ -14,6 +14,7 @@ int main()
     main2();
     main3();
     main4();
+    main5();
 
     return 0;
 }
@@ -177,7 +178,7 @@ int upperCount = 0;
 int lowerCount = 0;
 
 void readCharacter() {
-    c = cin.get();        //gets one character
+    c = cin.get();     //gets one character
 }
 
 int main3() {
@@ -203,7 +204,7 @@ int main3() {
         //Here we will check if the character is between uppercase A-Z
         cmp al, 'A';
         jl checkLower;       //if ASCII value of c < ASCII value of A, it is
-        					 //not uppercase, so jump to check if it is lowercase.
+                             //not uppercase, so jump to check if it is lowercase.
         cmp al, 'Z';
         jg checkLower;       //if c is > Z, it is not uppercase, so jump to checkLower
         inc upperCount;      //otherwise, it is uppercase A-Z, so increment upperCount
@@ -229,58 +230,62 @@ int main3() {
 //Q3 DONE
 
 //Question 4 Part 1:
-int main4()
-{
-	short numOfPrinters= 0;
-	short numOfFloppyDrives = 0;
-	short sizeOfRam =0;
-	_asm 
-	{
-		// number of printers
-		mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
-		mov bx, 1100000000000000b;	//bx = 1100 0000 0000 0000
-		and ax, bx;					//ax = 1100 1110 1001 1100 AND 1100 0000 0000 0000
-		shr ax, 14;					//ax = 1100 0000 0000 0000 shifted to 0000 0000 0000 0011
-		mov numOfPrinters, ax;		//numOfPrinters = 0000 0000 0000 0011 = 3
+int main4() {
+        short numOfPrinters = 0;
+        short numOfFloppyDrives = 0;
+        short sizeOfRam = 0;
+        _asm
+        {
+            // number of printers
+            mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
+            mov bx, 1100000000000000b;	//bx = 1100 0000 0000 0000
+            and ax, bx;					//ax = 1100 1110 1001 1100 AND 1100 0000 0000 0000
+            shr ax, 14;					//ax = 1100 0000 0000 0000 shifted to 0000 0000 0000 0011
+            mov numOfPrinters, ax;		//numOfPrinters = 0000 0000 0000 0011 = 3
 
-		//number of floppy drives
-		mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
-		mov bx, 0000000011000000b;	//bx = 0000 0000 1100 0000
-		and ax, bx;					//ax = 1100 1110 1001 1100 AND 0000 0000 1100 0000
-		shr ax, 6;					//ax = 0000 0000 1000 0000 shifted to 0000 0000 0000 0010
-		inc ax;						//ax = 0000 0000 0000 0010 + 1 = 2 + 1; 
-		mov numOfFloppyDrives, ax;	//numOfFloppyDirves = ax
+            //number of floppy drives
+            mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
+            mov bx, 0000000011000000b;	//bx = 0000 0000 1100 0000
+            and ax, bx;					//ax = 1100 1110 1001 1100 AND 0000 0000 1100 0000
+            shr ax, 6;					//ax = 0000 0000 1000 0000 shifted to 0000 0000 0000 0010
+            inc ax;						//ax = 0000 0000 0000 0010 + 1 = 2 + 1; 
+            mov numOfFloppyDrives, ax;	//numOfFloppyDirves = ax
 
-		//size of ram
-		mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
-		mov bx, 0000000000001100b;	//bx = 0000 0000 0000 1100
-		and ax, bx;					//ax = 1100 1110 1001 1100 AND 0000 0000 0000 1100
-		shr ax, 2;					//ax = 0000 0000 0000 1100 shifted to 0000 0000 0000 0011
-		mov cx, 0;					//cx = 0 will be used as loop counter
-		mov bx, 16;					//bx will hold the sum of ram
-		forLoop:					//using for loop;
-			cmp cx, ax;				//compare cx (the counter) to ax the limit for the loop
-			je done;				// if cs == ax break loop
+            //size of ram
+            mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
+            mov bx, 0000000000001100b;	//bx = 0000 0000 0000 1100
+            and ax, bx;					//ax = 1100 1110 1001 1100 AND 0000 0000 0000 1100
+            shr ax, 2;					//ax = 0000 0000 0000 1100 shifted to 0000 0000 0000 0011
+            mov cx, 0;					//cx = 0 will be used as loop counter
+            mov bx, 16;					//bx will hold the sum of ram
+        forLoop:					    //using for loop;
+            cmp cx, ax;				    //compare cx (the counter) to ax the limit for the loop
+            je done;				    // if cx == ax, break the loop
 
-			inc cx;					//cx++
-			add bx, 16;				//bx += 16
-			jmp forLoop;			//restarts the for loop
+            inc cx;					//cx++
+            add bx, 16;				//bx += 16
+            jmp forLoop;			//restarts the for loop
 
-		done:						//break
-			
-		mov sizeOfRam, bx;			//sizeOfRam = bx
+        done:						//break
 
-		
-	}
+            mov sizeOfRam, bx;		//sizeOfRam = bx
 
-	cout << "The number of printers connected to the computer: " << numOfPrinters << endl;
-	cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
-	cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
-	
-}
+
+        }
+
+        cout << endl;
+        cout << "The number of printers connected to the computer: " << numOfPrinters << endl;
+        cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
+        cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
+    }
+
+
+
+
+
+
 
 //Question 4 Part 2:
-char c;
 
 void isEven()
 {
@@ -292,18 +297,13 @@ void isOdd()
     cout << "BEEF is odd" << endl;
 }
 
-void readChar()
-{
-    c = cin.get();
-}
-
 int main5()
 {
     short totalDigit;
 
     //cout << "Enter a four word PIN: ";
 
-    _asm 
+    _asm
     {
         mov cx, 0;
 
@@ -331,16 +331,13 @@ int main5()
         mov ax, cx;
         cdq;
         idiv bx;
-        
+
         cmp dx, 0;
-        je isEven;
+        je iseven;
         call isOdd;
 
-    isEven:
+    iseven:
         call isEven;
-
-
-
     }
 }
 //Q4 DONE
