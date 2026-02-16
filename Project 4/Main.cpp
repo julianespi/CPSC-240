@@ -279,13 +279,6 @@ int main4() {
         cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
     }
 
-
-
-
-
-
-//I still have to add comments for this part
-
 //Question 4 Part 2:
     void isEven()
     {
@@ -299,49 +292,50 @@ int main4() {
 
     void checkPIN(short pin, string name)
     {
-        short totalDigit;
-
-        cout << name;
+        short sum;              
+        cout << name;           //This will be part of the output, e.g.: "BEEF is valid" where BEEF is name
 
         _asm
         {
-            mov cx, 0
+            mov sum, 0;         //sum=0
+            mov ax, pin;        //ax=pin. In binary, B=1011, E=1110, F=1111, so ax= 1011 1110 1110 1111.
+            and ax, 0xF000;     //This masks everything except the first digit.
+                                //We have 1011 1110 1110 1111 AND 1111 0000 0000 0000,
+                                //so ax= 1011 0000 0000 0000
 
-            mov ax, pin
-            and ax, 0xF000
-            shr ax, 12
-            add cx, ax
+            shr ax, 12;         //ax= 0000 0000 0000 1011 = 11
+            add sum, ax;        //sum=11
 
-            mov ax, pin
-            and ax, 0x0F00
-            shr ax, 8
-            add cx, ax
+            mov ax, pin;        //ax=1011 1110 1110 1111
+            and ax, 0x0F00;     //ax=0000 1110 0000 0000
+            shr ax, 8;          //ax= 0000 0000 0000 1110 = 14
+            add sum, ax;        //sum = 11+14= 25
 
-            mov ax, pin
-            and ax, 0x00F0
-            shr ax, 4
-            add cx, ax
+            mov ax, pin;        //ax=1011 1110 1110 1111
+            and ax, 0x00F0;     //ax=0000 0000 1110 0000
+            shr ax, 4;          //ax= 0000 0000 0000 1110 = 14
+            add sum, ax;        //sum=25+14= 39
 
-            mov ax, pin
-            and ax, 0x000F
-            add cx, ax
+            mov ax, pin;        //ax=1011 1110 1110 1111
+            and ax, 0x000F;     //ax=0000 0000 0000 1111 = 15
+            add sum, ax;        //sum=39+15= 54
 
-            mov bx, 2
-            mov ax, cx
-            cwd
-            idiv bx
+            mov bx, 2;          //bx=2
+            mov ax, sum;        //ax=54
+            cwd;    
+            idiv bx;            //dx:ax= 54/2 =27
 
-            cmp dx, 0
-            je even_label
-            call isOdd
-            jmp done
+            cmp dx, 0;          //check if the remainder is zero
+            je even_label;      //if so, then the number is even. jump to even_label
+            call isOdd;         //if the remainder is not zero, the number is odd. call isOdd.
+            jmp done;           //ends the process if the number was odd
 
             even_label :
-            call isEven
+            call isEven;        //this is called if the number was even
 
-                done :
+                done : 
         }
-    }
+    }                           //now this will repeat for FADE and CABE
 
     int main5()
     {
