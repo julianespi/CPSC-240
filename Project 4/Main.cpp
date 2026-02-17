@@ -7,14 +7,16 @@ int main2();
 int main3();
 int main4();
 int main5();
+int main6();
 
 int main()
 {
-    main1();
-    main2();
-    main3();
-    main4();
-    main5();
+    //main1();
+    //main2();
+    //main3();
+    //main4();
+    //main5();
+    main6();
 
     return 0;
 }
@@ -230,10 +232,12 @@ int main3() {
 //Q3 DONE
 
 //Question 4 Part 1:
-int main4() {
+int main4() 
+{
         short numOfPrinters = 0;
         short numOfFloppyDrives = 0;
         short sizeOfRam = 0;
+
         _asm
         {
             // number of printers
@@ -277,72 +281,146 @@ int main4() {
         cout << "The number of printers connected to the computer: " << numOfPrinters << endl;
         cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
         cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
-    }
+}
 
-//Question 4 Part 2:
-    void isEven()
+void iseven()
+{
+    cout << "BEEF is even" << endl;
+}
+
+void isOdd()
+{
+    cout << "BEEF is odd" << endl;
+}
+
+short totalDigit;
+
+
+void isOdd()
+{
+    cout << " is not a valid ID for the family" << endl;
+}
+
+void checkPIN(short pin, string name)
+{
+    short sum;              
+    cout << name;           //This will be part of the output, e.g.: "BEEF is valid" where BEEF is name
+
+    _asm
     {
-        cout << " is a valid ID for the family" << endl;
+        mov sum, 0;         //sum=0
+        mov ax, pin;        //ax=pin. In binary, B=1011, E=1110, F=1111, so ax= 1011 1110 1110 1111.
+        and ax, 0xF000;     //This masks everything except the first digit.
+                            //We have 1011 1110 1110 1111 AND 1111 0000 0000 0000,
+                            //so ax= 1011 0000 0000 0000
+
+        shr ax, 12;         //ax= 0000 0000 0000 1011 = 11
+        add sum, ax;        //sum=11
+
+        mov ax, pin;        //ax=1011 1110 1110 1111
+        and ax, 0x0F00;     //ax=0000 1110 0000 0000
+        shr ax, 8;          //ax= 0000 0000 0000 1110 = 14
+        add sum, ax;        //sum = 11+14= 25
+
+        mov ax, pin;        //ax=1011 1110 1110 1111
+        and ax, 0x00F0;     //ax=0000 0000 1110 0000
+        shr ax, 4;          //ax= 0000 0000 0000 1110 = 14
+        add sum, ax;        //sum=25+14= 39
+
+        mov ax, pin;        //ax=1011 1110 1110 1111
+        and ax, 0x000F;     //ax=0000 0000 0000 1111 = 15
+        add sum, ax;        //sum=39+15= 54
+
+        mov bx, 2;          //bx=2
+        mov ax, sum;        //ax=54
+        cwd;    
+        idiv bx;            //dx:ax= 54/2 =27
+
+        cmp dx, 0;          //check if the remainder is zero
+        je even_label;      //if so, then the number is even. jump to even_label
+        call isOdd;         //if the remainder is not zero, the number is odd. call isOdd.
+        jmp done;           //ends the process if the number was odd
+
+        even_label :
+        call isEven;        //this is called if the number was even
+
+            done : 
     }
+}                           //now this will repeat for FADE and CABE
 
-    void isOdd()
+int main5()
+{
+    checkPIN(0xBEEF, "BEEF");
+    checkPIN(0xFADE, "FADE");
+    checkPIN(0xCABE, "CABE");
+
+    return 0;
+}
+//Q4 DONE
+
+
+//for Q5
+short a,counter =0;
+void Base2()
+{
+    short x = 1 << 15, t, n = a;
+    for (int i = 1; i <= 16; ++i)
     {
-        cout << " is not a valid ID for the family" << endl;
-    }
-
-    void checkPIN(short pin, string name)
-    {
-        short sum;              
-        cout << name;           //This will be part of the output, e.g.: "BEEF is valid" where BEEF is name
-
-        _asm
+        t = n & x;
+        if (t == 0)
         {
-            mov sum, 0;         //sum=0
-            mov ax, pin;        //ax=pin. In binary, B=1011, E=1110, F=1111, so ax= 1011 1110 1110 1111.
-            and ax, 0xF000;     //This masks everything except the first digit.
-                                //We have 1011 1110 1110 1111 AND 1111 0000 0000 0000,
-                                //so ax= 1011 0000 0000 0000
-
-            shr ax, 12;         //ax= 0000 0000 0000 1011 = 11
-            add sum, ax;        //sum=11
-
-            mov ax, pin;        //ax=1011 1110 1110 1111
-            and ax, 0x0F00;     //ax=0000 1110 0000 0000
-            shr ax, 8;          //ax= 0000 0000 0000 1110 = 14
-            add sum, ax;        //sum = 11+14= 25
-
-            mov ax, pin;        //ax=1011 1110 1110 1111
-            and ax, 0x00F0;     //ax=0000 0000 1110 0000
-            shr ax, 4;          //ax= 0000 0000 0000 1110 = 14
-            add sum, ax;        //sum=25+14= 39
-
-            mov ax, pin;        //ax=1011 1110 1110 1111
-            and ax, 0x000F;     //ax=0000 0000 0000 1111 = 15
-            add sum, ax;        //sum=39+15= 54
-
-            mov bx, 2;          //bx=2
-            mov ax, sum;        //ax=54
-            cwd;    
-            idiv bx;            //dx:ax= 54/2 =27
-
-            cmp dx, 0;          //check if the remainder is zero
-            je even_label;      //if so, then the number is even. jump to even_label
-            call isOdd;         //if the remainder is not zero, the number is odd. call isOdd.
-            jmp done;           //ends the process if the number was odd
-
-            even_label :
-            call isEven;        //this is called if the number was even
-
-                done : 
+            cout << 0;
         }
-    }                           //now this will repeat for FADE and CABE
-
-    int main5()
-    {
-        checkPIN(0xBEEF, "BEEF");
-        checkPIN(0xFADE, "FADE");
-        checkPIN(0xCABE, "CABE");
-
-        return 0;
+        else
+        {
+            cout << 1;
+        }
+        if (i % 4 == 0)
+        {
+            cout << " ";
+        }
+        n = n << 1;
     }
-    //Q4 DONE
+    a = n; //save the original value of a
+    cout << endl;
+}
+
+short i,q = 15;
+int main6()
+{
+    _asm {
+        //displays the regestier
+        
+        mov a, ax;
+        call Base2;
+        
+        mov bx, 1000000000000000b;
+        mov i, 0;
+    
+    forloop:
+        mov ax, 0110101000101111b;
+        mov cl, 0;
+        cmp i, 16;
+        je done
+
+        and ax, bx;
+        shr ax, 15;
+        inc i;
+        cmp ax, 1;
+        je itsOn;
+
+        shr bx, cl;
+        inc i;
+        inc cl;
+        jmp forLoop;
+
+    itsOn:
+        inc counter;
+        jmp forLoop;
+
+    done:
+
+
+
+    }
+}
