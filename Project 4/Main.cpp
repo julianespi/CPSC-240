@@ -282,19 +282,12 @@ int main4()
         cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
         cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
 }
+//Q4 P1 done
 
 void iseven()
 {
-    cout << "BEEF is even" << endl;
+    cout << " is a valid ID for the family" << endl;
 }
-
-void isOdd()
-{
-    cout << "BEEF is odd" << endl;
-}
-
-short totalDigit;
-
 
 void isOdd()
 {
@@ -342,7 +335,7 @@ void checkPIN(short pin, string name)
         jmp done;           //ends the process if the number was odd
 
         even_label :
-        call isEven;        //this is called if the number was even
+        call iseven;        //this is called if the number was even
 
             done : 
     }
@@ -360,7 +353,8 @@ int main5()
 
 
 //for Q5
-short a,counter =0;
+short a, counter = 0;
+short b[16];
 void Base2()
 {
     short x = 1 << 15, t, n = a;
@@ -385,42 +379,66 @@ void Base2()
     cout << endl;
 }
 
-short i,q = 15;
+void displayArray()
+{
+    for (int i = 0; i < 16; i++)
+    {
+        if (b[i] != 0)
+        {
+            cout << b[i] << " ";
+        }
+    }
+}
+
+//important note cl is the only regiester that can bit wise shifting
 int main6()
 {
+    cout << "AX = ";
     _asm {
         //displays the regestier
+        mov ax, 0110101000101111b;  //ax = 0110 1010 0010 1111
+        mov a, ax;                  //a = 0110 1010 0010 1111
+        call Base2;                 //displays the binary 
+
+        lea esi, [b];               //esi = address of array b
         
-        mov a, ax;
-        call Base2;
-        
-        mov bx, 1000000000000000b;
-        mov i, 0;
+        mov bx, 0000000000000001b;  //bx = 0000 0000 0000 0001 
+        mov cl, 0;                  //cl = counter
     
     forloop:
-        mov ax, 0110101000101111b;
-        mov cl, 0;
-        cmp i, 16;
-        je done
+        mov ax, 0110101000101111b;  //ax = 0110 1010 0010 1111
+        cmp cl, 16;                 //if cl == 16
+        jge done                    //jmp to done
 
-        and ax, bx;
-        shr ax, 15;
-        inc i;
-        cmp ax, 1;
-        je itsOn;
+        and ax, bx;                 //0110 1010 0010 1111 and bx(which will be shifted as the loop iterates)
+        shr ax, cl;                 //the and result is shifted by the number of iterations
+        shl bx, 1;                  //the bx is sifted to the left one time per iteration to prepare for the next and
+ 
 
-        shr bx, cl;
-        inc i;
-        inc cl;
-        jmp forLoop;
+        cmp ax, 0;                  //if ax = 0
+        je isOff;                   //sprinkler is turned off.
 
-    itsOn:
-        inc counter;
+        inc counter;                //counter++ for working sprinklers
+        inc cl;                     //cl += 1
+
+        jmp forLoop;                
+
+    isOff:
+        //for evey iteration of the loop i need to multiply that by two to get the index of the array I want to add to
+        //this works but not sure if movzx is a something the professor will allow
+        movzx eax, cl;
+        mov ch, cl;                 //ch = the counte cl
+        inc ch;                     //ch ++ so that it represents the sprinklers not the index in the array
+        mov[esi + eax*2], ch;       //write to the index of the array that spot
+
+        inc cl;                     //  cl += 1
         jmp forLoop;
 
     done:
-
-
-
     }
+
+    cout << counter << " sprinklers are ON" << endl;
+    cout << "Defective sprinklers: ";
+    displayArray();
+
 }
