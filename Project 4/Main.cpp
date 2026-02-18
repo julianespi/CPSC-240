@@ -352,6 +352,7 @@ int main5()
 //Q4 DONE
 
 
+
 //for Q5
 short a, counter = 0;
 short b[16];
@@ -381,7 +382,7 @@ void Base2()
 
 void displayArray()
 {
-    for (int i = 0; i < 16; i++)
+    for (int i = 15; i >= 0; i--)
     {
         if (b[i] != 0)
         {
@@ -401,19 +402,19 @@ int main6()
         call Base2;                 //displays the binary 
 
         lea esi, [b];               //esi = address of array b
-        
+
         mov bx, 0000000000000001b;  //bx = 0000 0000 0000 0001 
         mov cl, 0;                  //cl = counter
-    
+
     forloop:
         mov ax, 0110101000101111b;  //ax = 0110 1010 0010 1111
         cmp cl, 16;                 //if cl == 16
         jge done                    //jmp to done
 
-        and ax, bx;                 //0110 1010 0010 1111 and bx(which will be shifted as the loop iterates)
+            and ax, bx;                 //0110 1010 0010 1111 and bx(which will be shifted as the loop iterates)
         shr ax, cl;                 //the and result is shifted by the number of iterations
         shl bx, 1;                  //the bx is sifted to the left one time per iteration to prepare for the next and
- 
+
 
         cmp ax, 0;                  //if ax = 0
         je isOff;                   //sprinkler is turned off.
@@ -421,7 +422,7 @@ int main6()
         inc counter;                //counter++ for working sprinklers
         inc cl;                     //cl += 1
 
-        jmp forLoop;                
+        jmp forLoop;
 
     isOff:
         //for evey iteration of the loop i need to multiply that by two to get the index of the array I want to add to
@@ -429,7 +430,7 @@ int main6()
         movzx eax, cl;
         mov ch, cl;                 //ch = the counte cl
         inc ch;                     //ch ++ so that it represents the sprinklers not the index in the array
-        mov[esi + eax*2], ch;       //write to the index of the array that spot
+        mov[esi + eax * 2], ch;       //write to the index of the array that spot
 
         inc cl;                     //  cl += 1
         jmp forLoop;
