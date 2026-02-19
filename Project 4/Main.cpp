@@ -7,6 +7,7 @@ int main2();
 int main3();
 int main4();
 int main5();
+int main6();
 
 int main()
 {
@@ -15,6 +16,7 @@ int main()
     main3();
     main4();
     main5();
+    main6();
 
     return 0;
 }
