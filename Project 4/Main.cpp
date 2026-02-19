@@ -11,11 +11,11 @@ int main6();
 
 int main()
 {
-    //main1();
-    //main2();
-    //main3();
-    //main4();
-    //main5();
+    main1();
+    main2();
+    main3();
+    main4();
+    main5();
     main6();
 
     return 0;
@@ -67,6 +67,15 @@ int main1()
         je done; 				//if customers=0, jump to done
         call readData;
         mov bill, 0;			//clear the bill before calculating the next customer's bill
+
+        //force drinkType input to be uppercase
+        mov al, drinkType;		//al=drinkType
+        and al, 11011111b;		//In ASCII, lowercase letters have the 6th bit from the right
+                                //set to 1 and uppercase letters have it as 0, so
+                                //clearing it converts any lowercase letter to uppercase.
+                                //We do this so that the user can enter ‘w’ or ‘W’ or ‘s’ or ‘S’
+        mov drinkType, al;		//drinkType=al
+
         cmp drinkType, 'W';
         je itIsWater;			//if W, jump to itIsWater
         cmp drinkType, 'S';
@@ -157,17 +166,17 @@ int main2() {
     scoreLoop:
         call readDataQ2;
         cmp score, -1;
-        je checkZero;       //if the user enters -1, check if nothing else was entered
-                            //before calculating the average.
-        mov eax, score;		//eax=score
-        add total, eax;		//total=total+score
-        inc scoreCtr;		//scoreCtr++
-        jmp scoreLoop;		//repeat loop
+        je checkZero;      	 //if the user enters -1, check if nothing else was entered
+                             //before calculating the average.
+        mov eax, score;		 //eax=score
+        add total, eax;		 //total=total+score
+        inc scoreCtr;		 //scoreCtr++
+        jmp scoreLoop;		 //repeat loop
 
     checkZero:
-        cmp scoreCtr, 0;    //check if the user entered any scores before typing -1
-        je skipAvg;         //if not, skip the division to prevent a crash
-        call calcAvg;       //otherwise, calculate the average
+        cmp scoreCtr, 0;            //check if the user entered any scores before typing -1
+        je skipAvg;         		//if not, skip the division to prevent a crash
+        call calcAvg;       		//otherwise, calculate the average
 
     skipAvg:
     }
@@ -194,6 +203,7 @@ int main3() {
         jne clearBuffer;
     }
 
+    cout << endl;
     cout << "Enter a sentence: ";
 
     _asm {
@@ -215,7 +225,7 @@ int main3() {
     checkLower:
         //Here we will check if the character is between lowercase a-z
         cmp al, 'a';
-        jl charLoop;         //if c < 'a', then c is not a letter, so get the next character
+        jl charLoop;       	  //if c < 'a', then c is not a letter, so get the next character
         cmp al, 'z';
         jg charLoop;         //if c > 'z', it is not a letter, so get next char
         inc lowerCount;      //otherwise, it is a lowercase letter, so increment lowerCount
@@ -232,59 +242,63 @@ int main3() {
 //Q3 DONE
 
 //Question 4 Part 1:
-int main4() 
-{
-        short numOfPrinters = 0;
-        short numOfFloppyDrives = 0;
-        short sizeOfRam = 0;
+int main4() {
+    short numOfPrinters = 0;
+    short numOfFloppyDrives = 0;
+    short sizeOfRam = 0;
+    _asm
+    {
+        // number of printers
+        mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
+        mov bx, 1100000000000000b;	//bx = 1100 0000 0000 0000
+        and ax, bx;				    //ax = 1100 1110 1001 1100 AND 
+        //1100 0000 0000 0000
+        shr ax, 14;				    //ax = 1100 0000 0000 0000 shifted to
+        //0000 0000 0000 0011
+        mov numOfPrinters, ax;		//numOfPrinters = 0000 0000 0000 0011 = 3
 
-        _asm
-        {
-            // number of printers
-            mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
-            mov bx, 1100000000000000b;	//bx = 1100 0000 0000 0000
-            and ax, bx;					//ax = 1100 1110 1001 1100 AND 1100 0000 0000 0000
-            shr ax, 14;					//ax = 1100 0000 0000 0000 shifted to 0000 0000 0000 0011
-            mov numOfPrinters, ax;		//numOfPrinters = 0000 0000 0000 0011 = 3
+        //number of floppy drives
+        mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
+        mov bx, 0000000011000000b;	//bx = 0000 0000 1100 0000
+        and ax, bx;				    //ax = 1100 1110 1001 1100 AND
+        //0000 0000 1100 0000
+        shr ax, 6;				    //ax = 0000 0000 1000 0000 shifted to
+        //0000 0000 0000 0010
+        inc ax;					    //ax = 0000 0000 0000 0010 + 1 = 2 + 1; 
+        mov numOfFloppyDrives, ax;	//numOfFloppyDrives = ax
 
-            //number of floppy drives
-            mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
-            mov bx, 0000000011000000b;	//bx = 0000 0000 1100 0000
-            and ax, bx;					//ax = 1100 1110 1001 1100 AND 0000 0000 1100 0000
-            shr ax, 6;					//ax = 0000 0000 1000 0000 shifted to 0000 0000 0000 0010
-            inc ax;						//ax = 0000 0000 0000 0010 + 1 = 2 + 1; 
-            mov numOfFloppyDrives, ax;	//numOfFloppyDirves = ax
+        //size of ram
+        mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
+        mov bx, 0000000000001100b;	//bx = 0000 0000 0000 1100
 
-            //size of ram
-            mov ax, 1100111010011100b;	//ax = 1100 1110 1001 1100
-            mov bx, 0000000000001100b;	//bx = 0000 0000 0000 1100
-            and ax, bx;					//ax = 1100 1110 1001 1100 AND 0000 0000 0000 1100
-            shr ax, 2;					//ax = 0000 0000 0000 1100 shifted to 0000 0000 0000 0011
-            mov cx, 0;					//cx = 0 will be used as loop counter
-            mov bx, 16;					//bx will hold the sum of ram
-        forLoop:					    //using for loop;
-            cmp cx, ax;				    //compare cx (the counter) to ax the limit for the loop
-            je done;				    // if cx == ax, break the loop
+        and ax, bx;					//ax = 1100 1110 1001 1100 AND
+        //0000 0000 0000 1100
+        shr ax, 2;					//ax = 0000 0000 0000 1100
+        //shifted to 0000 0000 0000 0011
+        mov cx, 0;					//cx = 0 will be used as loop counter
+        mov bx, 16;					//bx will hold the sum of ram
+    forLoop:					   	 //using for loop;
+        cmp cx, ax;				   	 //compare counter to ax
+        je done;				  	 // if cx == ax, break the loop
 
-            inc cx;					//cx++
-            add bx, 16;				//bx += 16
-            jmp forLoop;			//restarts the for loop
+        inc cx;						//cx++
+        add bx, 16;					//bx += 16
+        jmp forLoop;				//restarts the for loop
 
-        done:						//break
+    done:						//break
 
-            mov sizeOfRam, bx;		//sizeOfRam = bx
+        mov sizeOfRam, bx;			//sizeOfRam = bx
+    }
 
-
-        }
-
-        cout << endl;
-        cout << "The number of printers connected to the computer: " << numOfPrinters << endl;
-        cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
-        cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
+    cout << endl;
+    cout << "The number of printers connected to the computer: " << numOfPrinters << endl;
+    cout << "The number of floppy drives: " << numOfFloppyDrives << endl;
+    cout << "The size of the RAM: " << sizeOfRam << " GB RAM" << endl;
+    return 0;
 }
-//Q4 P1 done
 
-void iseven()
+//Question 4 Part 2:
+void isEven()
 {
     cout << " is a valid ID for the family" << endl;
 }
@@ -296,50 +310,52 @@ void isOdd()
 
 void checkPIN(short pin, string name)
 {
-    short sum;              
-    cout << name;           //This will be part of the output, e.g.: "BEEF is valid" where BEEF is name
+    short sum;
+    cout << endl;
+    cout << name;		//For  the output, e.g.: "BEEF is valid" where BEEF is name
 
     _asm
     {
-        mov sum, 0;         //sum=0
-        mov ax, pin;        //ax=pin. In binary, B=1011, E=1110, F=1111, so ax= 1011 1110 1110 1111.
-        and ax, 0xF000;     //This masks everything except the first digit.
-                            //We have 1011 1110 1110 1111 AND 1111 0000 0000 0000,
-                            //so ax= 1011 0000 0000 0000
+        mov sum, 0;		//sum=0
+        mov ax, pin;	//ax=pin. In binary, B=1011, E=1110, F=1111,
+                        //so ax= 1011 1110 1110 1111.
+        and ax, 0xF000;	//This masks everything except the first digit.
+                        //We have 1011 1110 1110 1111 AND 1111 0000 0000 0000
+                        //so ax= 1011 0000 0000 0000
 
-        shr ax, 12;         //ax= 0000 0000 0000 1011 = 11
-        add sum, ax;        //sum=11
+        shr ax, 12;		//ax= 0000 0000 0000 1011 = 11
+        add sum, ax;	//sum=11
 
-        mov ax, pin;        //ax=1011 1110 1110 1111
-        and ax, 0x0F00;     //ax=0000 1110 0000 0000
-        shr ax, 8;          //ax= 0000 0000 0000 1110 = 14
-        add sum, ax;        //sum = 11+14= 25
+        mov ax, pin;	//ax=1011 1110 1110 1111
+        and ax, 0x0F00;	//ax=0000 1110 0000 0000
+        shr ax, 8;		//ax= 0000 0000 0000 1110 = 14
+        add sum, ax;	//sum = 11+14= 25
 
-        mov ax, pin;        //ax=1011 1110 1110 1111
-        and ax, 0x00F0;     //ax=0000 0000 1110 0000
-        shr ax, 4;          //ax= 0000 0000 0000 1110 = 14
-        add sum, ax;        //sum=25+14= 39
+        mov ax, pin;	//ax=1011 1110 1110 1111
+        and ax, 0x00F0;	//ax=0000 0000 1110 0000
+        shr ax, 4;		//ax= 0000 0000 0000 1110 = 14
+        add sum, ax;	//sum=25+14= 39
 
-        mov ax, pin;        //ax=1011 1110 1110 1111
-        and ax, 0x000F;     //ax=0000 0000 0000 1111 = 15
-        add sum, ax;        //sum=39+15= 54
+        mov ax, pin;	//ax=1011 1110 1110 1111
+        and ax, 0x000F;	//ax=0000 0000 0000 1111 = 15
+        add sum, ax;	//sum=39+15= 54
 
-        mov bx, 2;          //bx=2
-        mov ax, sum;        //ax=54
-        cwd;    
-        idiv bx;            //dx:ax= 54/2 =27
+        mov bx, 2;		//bx=2
+        mov ax, sum;	//ax=54
+        cwd;
+        idiv bx;		//dx:ax= 54/2 =27
 
-        cmp dx, 0;          //check if the remainder is zero
-        je even_label;      //if so, then the number is even. jump to even_label
-        call isOdd;         //if the remainder is not zero, the number is odd. call isOdd.
-        jmp done;           //ends the process if the number was odd
+        cmp dx, 0;		//check if the remainder is zero
+        je even_label;	//if so, then the number is even. jump to even_label
+        call isOdd;		//if the remainder is not zero, the number is odd. call isOdd.
+        jmp done;		//ends the process if the number was odd
 
-        even_label :
-        call iseven;        //this is called if the number was even
+    even_label:
+        call isEven;	//this is called if the number was even
 
-            done : 
+    done:
     }
-}                           //now this will repeat for FADE and CABE
+}				//now this will repeat for FADE and CABE
 
 int main5()
 {
@@ -352,31 +368,31 @@ int main5()
 //Q4 DONE
 
 
+//Question 5
+short a, counter = 0;		//'a' will store AX value. 'counter' counts active sprinklers
+short b[16];				//array to store defective sprinklers
 
-//for Q5
-short a, counter = 0;
-short b[16];
 void Base2()
 {
-    short x = 1 << 15, t, n = a;
+    short x = 1 << 15, t, n = a;		//x = 1000 0000 0000 0000, n = copy of a
     for (int i = 1; i <= 16; ++i)
     {
-        t = n & x;
+        t = n & x;                 		//mask the current highest bit
         if (t == 0)
         {
-            cout << 0;
+            cout << 0;             		//print 0 if bit is 0
         }
         else
         {
-            cout << 1;
+            cout << 1;             		//print 1 if bit is 1
         }
         if (i % 4 == 0)
         {
-            cout << " ";
+            cout << " ";           		//add space every 4 bits
         }
-        n = n << 1;
+        n = n << 1;                		//shift n left to check next bit
     }
-    a = n; //save the original value of a
+    a = n;
     cout << endl;
 }
 
@@ -384,56 +400,50 @@ void displayArray()
 {
     for (int i = 15; i >= 0; i--)
     {
-        if (b[i] != 0)
+        if (b[i] != 0)            		//print only non-zero elements
         {
-            cout << b[i] << " ";
+            cout << b[i] << " ";   		//display defective sprinklers
         }
     }
 }
 
-//important note cl is the only regiester that can bit wise shifting
 int main6()
 {
     cout << "AX = ";
     _asm {
-        //displays the regestier
-        mov ax, 0110101000101111b;  //ax = 0110 1010 0010 1111
-        mov a, ax;                  //a = 0110 1010 0010 1111
-        call Base2;                 //displays the binary 
+        mov ax, 0110101000101111b;   //ax = 0110 1010 0010 1111
+        mov a, ax;                 	//store ax in variable a
+        call Base2;                  //print binary representation
 
-        lea esi, [b];               //esi = address of array b
+        lea esi, [b];              		//load address of array b into esi
 
-        mov bx, 0000000000000001b;  //bx = 0000 0000 0000 0001 
-        mov cl, 0;                  //cl = counter
+        mov bx, 0000000000000001b;      //bx = 1 (used as mask)
+        mov cl, 0;                  	//cl = loop counter
 
     forloop:
-        mov ax, 0110101000101111b;  //ax = 0110 1010 0010 1111
-        cmp cl, 16;                 //if cl == 16
-        jge done                    //jmp to done
+        mov ax, 0110101000101111b;           //reload ax for each iteration
+        cmp cl, 16;                 		//check if we have done 16 bits
+        jge done                    		//if yes, jump to done
 
-        and ax, bx;                 //0110 1010 0010 1111 and bx(which will be shifted as the loop iterates)
-        shr ax, cl;                 //the and result is shifted by the number of iterations
-        shl bx, 1;                  //the bx is sifted to the left one time per iteration to prepare for the next and
+            and ax, bx;                		 //mask the bit at position cl
+        shr ax, cl;                 		//shift masked bit to bit 0
+        shl bx, 1;                 		    //shift mask left for next bit
 
+        cmp ax, 0;                  		//check if the bit is 0 (sprinkler off)
+        je isOff;                  		    //if 0, jump to isOff
 
-        cmp ax, 0;                  //if ax = 0
-        je isOff;                   //sprinkler is turned off.
-
-        inc counter;                //counter++ for working sprinklers
-        inc cl;                     //cl += 1
-
-        jmp forLoop;
+        inc counter;                		//bit is 1, increment ON sprinklers counter
+        inc cl;                     		//increment loop counter
+        jmp forLoop;                		//repeat loop
 
     isOff:
-        //for evey iteration of the loop i need to multiply that by two to get the index of the array I want to add to
-        //this works but not sure if movzx is a something the professor will allow
-        movzx eax, cl;
-        mov ch, cl;                 //ch = the counte cl
-        inc ch;                     //ch ++ so that it represents the sprinklers not the index in the array
-        mov[esi + eax * 2], ch;       //write to the index of the array that spot
+        movzx eax, cl;              		//extend cl to eax (index)
+        mov ch, cl;                 		//store cl in ch
+        inc ch;                     		//increment for sprinkler numbering
+        mov[esi + eax * 2], ch;    	        //store defective sprinkler number in array
 
-        inc cl;                     //  cl += 1
-        jmp forLoop;
+        inc cl;                     		//increment loop counter
+        jmp forLoop;               		    //repeat loop
 
     done:
     }
@@ -441,5 +451,5 @@ int main6()
     cout << counter << " sprinklers are ON" << endl;
     cout << "Defective sprinklers: ";
     displayArray();
-
 }
+//Q5 DONE
