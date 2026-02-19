@@ -411,7 +411,7 @@ int main6()
         cmp cl, 16;                 //if cl == 16
         jge done                    //jmp to done
 
-            and ax, bx;                 //0110 1010 0010 1111 and bx(which will be shifted as the loop iterates)
+        and ax, bx;                 //0110 1010 0010 1111 and bx(which will be shifted as the loop iterates)
         shr ax, cl;                 //the and result is shifted by the number of iterations
         shl bx, 1;                  //the bx is sifted to the left one time per iteration to prepare for the next and
 
