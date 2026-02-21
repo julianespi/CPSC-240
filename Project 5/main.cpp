@@ -1,77 +1,89 @@
 #include <iostream>
 using namespace std;
 
-void main1();
-void main2();
-void main3();
+int main1();
+//int main2();
+//int main3();
 
-int main()
-{
+int main() {
 	main1();
-	main2();
-	main3();
-
+	//main2();
+	//main3();
 	return 0;
 }
 
-int shirt[4][4] = { 10,20,30,40,20,10,40,30,5,15,20,25,30,25,20,15 };
+//Question 1
+int shirt[4][4] = { 
+	{10, 20, 30, 40},	// Red row 
+	{20, 10, 40, 30},	// Green row 
+	{5, 15, 20, 25},	// Blue row 
+	{30, 25, 20, 15}	// Black row 
+	};					//4 rows, 4 cols
 
-void main1() 
+int main1()
 {
-	int allshirts = 0;
+	int allShirts = 0;
 	int mShirts = 0;
 	int bShirts = 0;
 	int i = 0;
 
 	_asm
 	{
-		lea esi, [shirt];	// esi holds address to shirts
-		mov eax, 0;			//eax = 0 eax will hold our sum
+		//all shirts
+		lea esi, [shirt];	//esi = memory address of shirt[0][0] (esi is our pointer walking through the array)
+		mov eax, 0;			//eax = 0. eax will hold our sum (running total of all shirts being added)
 	allforloop:
-		cmp i, 16;			//if i =16
-		je alldone;			//jmp to done
+		cmp i, 16;			
+		je alldone;			//if i = 16, jmp to done
 
-		add eax, [esi];		//eax = the value at address esi
-		add esi, 4;			//add 4 to increment to the next index in the array
-		//inc by 4 becasue int are 4 bytes
+		add eax, [esi];		//add current element. on the first iteration it will be eax = eax + 10
+							//since shirt[0][0] = 10.
+		add esi, 4;			//move 4 bytes forward to access the next int in memory
 
 		inc i;				//inc the counter i
 
-		jmp allforloop;		// jmp to the start of the loop
+		jmp allforloop;		//jmp to the start of the loop
 	alldone:
-		mov allshirts, eax;	// move the sum in eax to the variable allshirts
+		mov allShirts, eax;	//move the sum in eax to the variable allShirts
+		//all shirts done
 
+		//medium shirts
 		//restart address and eax for medium loop
-		lea esi, [shirt];	// esi holds address to shirts
-		mov eax, 0;			//eax = 0 eax will hold our sum
-		mov i, 0;
+		lea esi, [shirt];	//esi = memory address of shirt[0][0]
+		mov eax, 0;			//eax = 0. eax will hold our sum
+		mov i, 0;			//i=0 (i is our counter)
 
-		add esi, 4;
-
+		add esi, 4;			//this moves it to the first medium shirt (shirt[0][1]).
+							//now that we are in the correct column, we will loop through this Medium column only.
+							//we will check shirt[0][1], shirt [1][1], shirt[2][1] and shirt[3][1].
 	mediumforloop:
-		cmp i, 4;
-		je mediumdone;
+		cmp i, 4;			
+		je mediumdone;		//there are only 4 medium shirts, one for each color. we start at i=0
+							//and go to i=3. once i=4, jump to mediumdone.
 
-		add eax, [esi];
-		add esi, 16;
+		add eax, [esi];		//eax = [esi] + eax. adds current element to running total.
+		add esi, 16;		//move 4 elements (16 bytes) forward to get from shirt[0][1] to shirt[1][1] etc.
 
-		inc i;
+		inc i;				//increment counter
 
 		jmp mediumforloop;
 	mediumdone:
-		mov mShirts, eax;
+		mov mShirts, eax;	//move the sum in eax into mShirts
+		//medium shirts done
 
+		//blue shirts
 		//restart address and eax for blue loop
-		lea esi, [shirt];	// esi holds address to shirts
-		mov eax, 0;			//eax = 0 eax will hold our sum
-		mov i, 0;
+		lea esi, [shirt];	//esi=shirt[0][0]
+		mov eax, 0;			//eax = 0. eax will hold our sum
+		mov i, 0;			//i=0 (i is our counter)
 
-		add esi, 32;
+		add esi, 32;		//there are two rows before the blue row, each 16 bytes. so we move
+							//32 bytes forward from shirt[0][0] to get to the blue row.
 
 	blueforloop:
 		cmp i, 4;
 		je bluedone;
-		
+
 		add eax, [esi];		//eax = the value at address esi
 		add esi, 4;			//add 4 to increment to the next index in the array
 		inc i;
@@ -80,23 +92,14 @@ void main1()
 	bluedone:
 		mov bShirts, eax;
 	}
-	cout << allshirts << endl;
-	cout << mShirts << endl;
-	cout << bShirts << endl;
-}
+	//blue shirts done
 
+	cout << "Number of all shirts: " << allShirts << endl;
+	cout << "Number of Medium shirts: " << mShirts << endl;
+	cout << "Number of blue shirts: " << bShirts << endl;
+	return 0;
+}
+//Q1 DONE
+
+//Question 2
 int a[5] = { 9,3,22,8,1 };
-
-void main2()
-{
-
-}
-
-int shirts2[3][3][2] = {	{ { 1, 2},{ 3, 4},{ 5, 6} },
-							{ { 7, 8},{ 9,10},{11,12} },
-							{ {13,14},{15,16},{17,18} } };
-
-void main3()
-{
-
-}
