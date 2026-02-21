@@ -102,4 +102,52 @@ int main1()
 //Q1 DONE
 
 //Question 2
-int a[5] = { 9,3,22,8,1 };
+//I need to add comments still
+int main2() {
+		int a[5] = {9, 3, 22, 8, 1}; 
+		int n = 5; 
+
+		cout << "Original array a: "; 
+		for (int i = 0; i < n; i++) { 
+			cout << a[i] << " ";     
+		} 
+
+		_asm {
+			mov ecx, n;
+			dec ecx; 
+			mov eax, 0; 
+
+		outerloop:
+			cmp eax, ecx;
+			jge donesorting; 
+			mov ebx, 0; 
+
+		innerloop: 
+			cmp ebx, ecx; 
+			jge nextouter; 
+			mov edx, [a + ebx * 4]; 
+			mov esi, [a + ebx * 4 + 4]; 
+			cmp edx, esi; 
+			jle noswap; 
+			mov[a + ebx * 4], esi;
+			mov[a + ebx * 4 + 4], edx; 
+
+		noswap: 
+			inc ebx; 
+			jmp innerloop; 
+
+		nextouter: 
+			inc eax; 
+			jmp outerloop; 
+
+		donesorting: 
+		}
+
+		cout << endl;
+		cout << "Sorted array a: "; 
+		for (int i = 0; i < n; i++) { 
+			cout << a[i] << " ";      
+		}
+		cout << endl;                
+		return 0; 
+	}
