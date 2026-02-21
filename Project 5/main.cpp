@@ -102,43 +102,42 @@ int main1()
 //Q1 DONE
 
 //Question 2
-//I need to add comments still
 int main2() {
-		int a[5] = {9, 3, 22, 8, 1}; 
-		int n = 5; 
+		int a[5] = {9, 3, 22, 8, 1}; 		//the given array
+		int n = 5; 							//array size
 
 		cout << "Original array a: "; 
 		for (int i = 0; i < n; i++) { 
-			cout << a[i] << " ";     
+			cout << a[i] << " ";     		//prints out every element of the given array
 		} 
 
 		_asm {
-			mov ecx, n;
-			dec ecx; 
-			mov eax, 0; 
+			mov ecx, n;						//ecx= n = 5 
+			dec ecx; 						//ecx = 4 because bubble sort only needs n-1 comparisons per pass
+			mov eax, 0; 					//eax=0 (outer loop counter counts # of passes)
 
 		outerloop:
-			cmp eax, ecx;
-			jge donesorting; 
-			mov ebx, 0; 
+			cmp eax, ecx;					//check if we have done 4 passes	
+			jge donesorting; 				//if so, jump to donesorting
+			mov ebx, 0; 					//ebx=0 (inner loop counter for pair comparisons)
 
 		innerloop: 
 			cmp ebx, ecx; 
-			jge nextouter; 
-			mov edx, [a + ebx * 4]; 
-			mov esi, [a + ebx * 4 + 4]; 
-			cmp edx, esi; 
-			jle noswap; 
-			mov[a + ebx * 4], esi;
-			mov[a + ebx * 4 + 4], edx; 
+			jge nextouter; 					//if ebx >= ecx, jump to nextouter since pair comparisons are done
+			mov edx, [a + ebx * 4]; 		//finding the first element for our current comparison
+			mov esi, [a + ebx * 4 + 4]; 	//finding the second element for our current comparison
+			cmp edx, esi; 			
+			jle noswap; 					//if the first element <= second element, do not swap
+			mov[a + ebx * 4], esi;			//otherwise, move esi (smaller #) to first position
+			mov[a + ebx * 4 + 4], edx; 		//move edx (larger #) to second position
 
 		noswap: 
-			inc ebx; 
-			jmp innerloop; 
+			inc ebx; 						//move onto next pair 
+			jmp innerloop; 					
 
 		nextouter: 
-			inc eax; 
-			jmp outerloop; 
+			inc eax; 						//eax++ because we have completed a full pass
+			jmp outerloop; 					//starts the next pass
 
 		donesorting: 
 		}
@@ -146,8 +145,9 @@ int main2() {
 		cout << endl;
 		cout << "Sorted array a: "; 
 		for (int i = 0; i < n; i++) { 
-			cout << a[i] << " ";      
+			cout << a[i] << " ";      		
 		}
 		cout << endl;                
 		return 0; 
 	}
+//Q2 DONE
