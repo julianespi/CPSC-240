@@ -2,13 +2,13 @@
 using namespace std;
 
 int main1();
-//int main2();
-//int main3();
+int main2();
+int main3();
 
 int main() {
 	main1();
-	//main2();
-	//main3();
+	main2();
+	main3();
 	return 0;
 }
 
@@ -151,3 +151,136 @@ int main2() {
 		return 0; 
 	}
 //Q2 DONE
+
+//Q3
+
+int a[3][3][2] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 };
+
+int main3()
+{
+	int allShirts = 0;
+	int mShirts = 0;
+	int sShirts = 0;
+	int rshirts = 0;
+	int i = 0;
+	_asm
+	{
+		//all shirts
+		lea esi, [a];	//esi = memory address of shirt[0][0] (esi is our pointer walking through the array)
+		mov ebx, 0;			//eax = 0. eax will hold our sum (running total of all shirts being added)
+		mov ecx, 0;
+	allforloop:
+		cmp i, 18;
+		je alldone;			//if i = 16, jmp to done
+
+		//moves the counter to eax so i can see if it is even or odd
+		mov eax, i;
+		cdq;
+		mov ecx, 2;
+		idiv ecx;
+
+		inc i;				//inc the counter i
+
+		cmp edx, 1;
+		je alloddloop;
+
+	allevenloop:
+		//add Long sleeves 
+		mov ebx, allShirts;
+		add ebx, [esi];
+		mov allShirts, ebx;
+
+		//add short sleeve
+		mov ebx, sShirts;
+		add ebx, [esi];
+		mov sShirts, ebx;
+
+		//increment index
+		add esi, 4;
+		
+		//reset loop
+		jmp allforloop;
+	alloddloop:
+		//add long sleeves
+		mov ebx, allShirts;
+		add ebx, [esi];
+		mov allShirts, ebx;
+
+		//increment loop
+		add esi, 4;
+		
+		//reset loop
+		jmp allforloop;	
+
+	alldone:
+		
+
+	//compute medium size shirts
+		//reset each variable
+		lea esi, [a];
+		mov ebx, 0; // going to hold sum in ebx to do math in eax
+		mov i, 0;
+
+		add esi, 8; // set index to 2
+
+
+	mediumloop:
+		cmp i, 6;
+		je mediumdone;
+
+
+		add ebx, [esi];
+
+		mov eax, i;
+		mov ecx, 2
+		cwd;
+		idiv ecx;
+
+		inc i;
+
+		cmp edx, 1;// if it is 1 than move to odd loop if it is even move to even loop
+		je oddloop;
+		//odd loop incrase esi by 4
+		//even loop increases esi by 20
+
+	evenloop:
+
+		add esi, 4;
+		jmp mediumloop;
+
+	oddloop:
+
+		add esi, 20;
+		jmp mediumloop;
+
+
+	mediumdone:
+		mov mShirts, ebx;
+
+		//reset each variable
+		lea esi, [a];
+		mov ebx, 0; // going to hold sum in ebx to do math in eax
+		mov i, 0;
+
+
+	redloop:
+		cmp i, 6;
+		je reddone;
+
+		add ebx, [esi];
+		add esi, 4;
+
+		inc i;
+
+		jmp redloop;
+	reddone:
+		mov rshirts, ebx;
+
+	}
+
+	cout << "All shirts: " << allShirts << endl;
+	cout << "Medium size shirts: " << mShirts << endl;
+	cout << "Short sleeves shirts: " << sShirts << endl;
+	cout << "Red shirts: " << rshirts << endl;
+
+}
