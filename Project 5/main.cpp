@@ -257,6 +257,8 @@ int main3()
 	mediumdone:
 		mov mShirts, ebx;
 
+
+	//compute redx shirts
 		//reset each variable
 		lea esi, [a];
 		mov ebx, 0; // going to hold sum in ebx to do math in eax
