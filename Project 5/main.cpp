@@ -97,131 +97,147 @@ int main1()
 	cout << "Number of all shirts: " << allShirts << endl;
 	cout << "Number of Medium shirts: " << mShirts << endl;
 	cout << "Number of blue shirts: " << bShirts << endl;
+	cout << endl;
 	return 0;
 }
 //Q1 DONE
 
 //Question 2
 int main2() {
-		int a[5] = {9, 3, 22, 8, 1}; 		//the given array
-		int n = 5; 							//array size
+	int a[5] = { 9, 3, 22, 8, 1 }; 		//the given array
+	int n = 5; 							//array size
 
-		cout << "Original array a: "; 
-		for (int i = 0; i < n; i++) { 
-			cout << a[i] << " ";     		//prints out every element of the given array
-		} 
-
-		_asm {
-			mov ecx, n;						//ecx= n = 5 
-			dec ecx; 						//ecx = 4 because bubble sort only needs n-1 comparisons per pass
-			mov eax, 0; 					//eax=0 (outer loop counter counts # of passes)
-
-		outerloop:
-			cmp eax, ecx;					//check if we have done 4 passes	
-			jge donesorting; 				//if so, jump to donesorting
-			mov ebx, 0; 					//ebx=0 (inner loop counter for pair comparisons)
-
-		innerloop: 
-			cmp ebx, ecx; 
-			jge nextouter; 					//if ebx >= ecx, jump to nextouter since pair comparisons are done
-			mov edx, [a + ebx * 4]; 		//finding the first element for our current comparison
-			mov esi, [a + ebx * 4 + 4]; 	//finding the second element for our current comparison
-			cmp edx, esi; 			
-			jle noswap; 					//if the first element <= second element, do not swap
-			mov[a + ebx * 4], esi;			//otherwise, move esi (smaller #) to first position
-			mov[a + ebx * 4 + 4], edx; 		//move edx (larger #) to second position
-
-		noswap: 
-			inc ebx; 						//move onto next pair 
-			jmp innerloop; 					
-
-		nextouter: 
-			inc eax; 						//eax++ because we have completed a full pass
-			jmp outerloop; 					//starts the next pass
-
-		donesorting: 
-		}
-
-		cout << endl;
-		cout << "Sorted array a: "; 
-		for (int i = 0; i < n; i++) { 
-			cout << a[i] << " ";      		
-		}
-		cout << endl;                
-		return 0; 
+	cout << "Original array a: ";
+	for (int i = 0; i < n; i++) {
+		cout << a[i] << " ";     		//prints out every element of the given array
 	}
-//Q2 DONE
 
-//Q3
+	_asm {
+		mov ecx, n;						//ecx= n = 5 
+		dec ecx; 						//ecx = 4 because bubble sort only needs n-1 comparisons per pass
+		mov eax, 0; 					//eax=0 (outer loop counter counts # of passes)
 
+	outerloop:
+		cmp eax, ecx;					//check if we have done 4 passes	
+		jge donesorting; 				//if so, jump to donesorting
+		mov ebx, 0; 					//ebx=0 (inner loop counter for pair comparisons)
+
+	innerloop:
+		cmp ebx, ecx;
+		jge nextouter; 					//if ebx >= ecx, jump to nextouter since pair comparisons are done
+		mov edx, [a + ebx * 4]; 		//finding the first element for our current comparison
+		mov esi, [a + ebx * 4 + 4]; 	//finding the second element for our current comparison
+		cmp edx, esi;
+		jle noswap; 					//if the first element <= second element, do not swap
+		mov[a + ebx * 4], esi;			//otherwise, move esi (smaller #) to first position
+		mov[a + ebx * 4 + 4], edx; 		//move edx (larger #) to second position
+
+	noswap:
+		inc ebx; 						//move onto next pair 
+		jmp innerloop;
+
+	nextouter:
+		inc eax; 						//eax++ because we have completed a full pass
+		jmp outerloop; 					//starts the next pass
+
+	donesorting:
+	}
+
+	cout << endl;
+	cout << "Sorted array a: ";
+	for (int i = 0; i < n; i++) {
+		cout << a[i] << " ";
+	}
+	cout << endl;
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+//Question 3
+
+//initialize the 3D array; 3 colors, 3 sizes per color, and 2 sleeve length options.
+//the computer stores this as a straight line of numbers 1-18 in memory, not a cube.
+//ex: 1 is at address 5000, 2 is at address 5004, 3 is at address 5008, etc.
 int a[3][3][2] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 };
 
 int main3()
 {
-	int allShirts = 0;
-	int mShirts = 0;
-	int sShirts = 0;
-	int rshirts = 0;
-	int i = 0;
+	int allShirts = 0;	//will store total number of all shirts
+	int mShirts = 0;	//will store total number of medium shirts
+	int sShirts = 0;	//will store total number of short sleeve shirts
+	int rshirts = 0;	//will store total number of red shirts
+	int i = 0;			//counter used to count how many elements we went through
 	_asm
 	{
-		//all shirts
-		lea esi, [a];	//esi = memory address of shirt[0][0] (esi is our pointer walking through the array)
-		mov ebx, 0;			//eax = 0. eax will hold our sum (running total of all shirts being added)
-		mov ecx, 0;
+		//All shirts
+		lea esi, [a];	//esi = memory address of shirt[0][0][0] (esi is our pointer walking through the array)
+						//so, at first, esi= memory address of 1 since 1 is the first value in our array.
+						//if the first address lives at memory address 5000, then esi=5000 and [esi]=1.
+		mov ebx, 0;		//ebx = 0. ebx will hold our sum (running total of all shirts being added)
+	
 	allforloop:
 		cmp i, 18;
-		je alldone;			//if i = 16, jmp to done
+		je alldone;		//if i = 18, jump to done because there are 18 numbers in the iteration.
 
-		//moves the counter to eax so i can see if it is even or odd
-		mov eax, i;
+		//We divide i by 2 to see if the index is even or odd because the pattern
+		//is that if i is even, it is long sleeve and if it is odd, it is short sleeve.
+		mov eax, i;		//eax=i
 		cdq;
-		mov ecx, 2;
-		idiv ecx;
+		mov ecx, 2;		//ecx=2
+		idiv ecx;		//edx:eax = eax/2... after division, the quotient goes into eax and
+						//the remainder goes into edx. If the remainder = 0, i is even.
+						//If the remainder = 1, the counter is odd.
 
-		inc i;				//inc the counter i
+		inc i;			//increment the counter i because we processed one element
 
 		cmp edx, 1;
-		je alloddloop;
+		je alloddloop;	//if i was odd, jump to alloddloop
 
 	allevenloop:
-		//add Long sleeves 
-		mov ebx, allShirts;
-		add ebx, [esi];
-		mov allShirts, ebx;
+		//Adds even shirts to allShirts
+		mov ebx, allShirts;		//ebx=allShirts
+		add ebx, [esi];			//ebx=ebx+value in the array based on what iteration we are on
+		mov allShirts, ebx;		//allShirts=ebx
 
-		//add short sleeve
-		mov ebx, sShirts;
-		add ebx, [esi];
-		mov sShirts, ebx;
+		//Adds even shirts to short sleeve?
+		mov ebx, sShirts;		//ebx=sShirts
+		add ebx, [esi];			//ebx=ebx+value in the array based on what iteration we are on
+		mov sShirts, ebx;		//sShirts=ebx
 
-		//increment index
-		add esi, 4;
-		
+		add esi, 4;				//move forward four bytes to get the next element in the array
+
 		//reset loop
 		jmp allforloop;
-	alloddloop:
-		//add long sleeves
-		mov ebx, allShirts;
-		add ebx, [esi];
-		mov allShirts, ebx;
 
-		//increment loop
-		add esi, 4;
-		
+	alloddloop:
+		//This is adding the current array value to allShirts (how many long sleeves get added).
+		mov ebx, allShirts;		//ebx=allShirts
+		add ebx, [esi];			//ebx=ebx+[esi]
+		mov allShirts, ebx;		//allShirts=ebx
+
+		add esi, 4;				//move forward four bytes to get the next element in the array
+
 		//reset loop
-		jmp allforloop;	
+		jmp allforloop;
 
 	alldone:
-		
 
-	//compute medium size shirts
+		//compute medium size shirts
 		//reset each variable
 		lea esi, [a];
-		mov ebx, 0; // going to hold sum in ebx to do math in eax
+		mov ebx, 0;			//going to hold sum in ebx to do math in eax
 		mov i, 0;
 
-		add esi, 8; // set index to 2
+		add esi, 8;			//set index to 2
 
 
 	mediumloop:
@@ -233,12 +249,12 @@ int main3()
 
 		mov eax, i;
 		mov ecx, 2
-		cwd;
+			cwd;
 		idiv ecx;
 
 		inc i;
 
-		cmp edx, 1;// if it is 1 than move to odd loop if it is even move to even loop
+		cmp edx, 1;			//if it is 1 than move to odd loop if it is even move to even loop
 		je oddloop;
 		//odd loop incrase esi by 4
 		//even loop increases esi by 20
@@ -258,10 +274,10 @@ int main3()
 		mov mShirts, ebx;
 
 
-	//compute redx shirts
+		//compute redx shirts
 		//reset each variable
 		lea esi, [a];
-		mov ebx, 0; // going to hold sum in ebx to do math in eax
+		mov ebx, 0;			//going to hold sum in ebx to do math in eax
 		mov i, 0;
 
 
@@ -280,6 +296,7 @@ int main3()
 
 	}
 
+	cout << endl;
 	cout << "All shirts: " << allShirts << endl;
 	cout << "Medium size shirts: " << mShirts << endl;
 	cout << "Short sleeves shirts: " << sShirts << endl;
