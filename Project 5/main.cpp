@@ -151,149 +151,110 @@ int main2() {
 	cout << endl;
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
+//Q2 DONE
 
 //Question 3
-
-//initialize the 3D array; 3 colors, 3 sizes per color, and 2 sleeve length options.
-//the computer stores this as a straight line of numbers 1-18 in memory, not a cube.
-//ex: 1 is at address 5000, 2 is at address 5004, 3 is at address 5008, etc.
-int a[3][3][2] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 };
+int a[3][3][2] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
 
 int main3()
 {
-	int allShirts = 0;	//will store total number of all shirts
-	int mShirts = 0;	//will store total number of medium shirts
-	int sShirts = 0;	//will store total number of short sleeve shirts
-	int rshirts = 0;	//will store total number of red shirts
-	int i = 0;			//counter used to count how many elements we went through
+	int allShirts = 0;	
+	int mShirts = 0;	
+	int sShirts = 0;	
+	int rshirts = 0;	
+	int i = 0;			//counter for loop iterations
+
 	_asm
 	{
-		//All shirts
-		lea esi, [a];	//esi = memory address of shirt[0][0][0] (esi is our pointer walking through the array)
-						//so, at first, esi= memory address of 1 since 1 is the first value in our array.
-						//if the first address lives at memory address 5000, then esi=5000 and [esi]=1.
-		mov ebx, 0;		//ebx = 0. ebx will hold our sum (running total of all shirts being added)
-	
+		//total shirts and short sleeves
+		lea esi, [a];	//esi=address of first element a[0][0][0]
+		mov ebx, 0;	//ebx=0
+
 	allforloop:
 		cmp i, 18;
-		je alldone;		//if i = 18, jump to done because there are 18 numbers in the iteration.
+		je alldone;	//if i=18, jump to alldone since there are 18 elements
 
-		//We divide i by 2 to see if the index is even or odd because the pattern
-		//is that if i is even, it is long sleeve and if it is odd, it is short sleeve.
-		mov eax, i;		//eax=i
+		mov eax, i;	//eax=i (current index)
 		cdq;
-		mov ecx, 2;		//ecx=2
-		idiv ecx;		//edx:eax = eax/2... after division, the quotient goes into eax and
-						//the remainder goes into edx. If the remainder = 0, i is even.
-						//If the remainder = 1, the counter is odd.
+		mov ecx, 2;	//ecx = 2
+		idiv ecx;	//eax = quotient, edx = remainder (0 means even, 1 means odd)
 
-		inc i;			//increment the counter i because we processed one element
-
-		cmp edx, 1;
-		je alloddloop;	//if i was odd, jump to alloddloop
+		inc i;		//one element covered, so increment i
+		cmp edx, 1;	//check remainder from division to see if i is odd or even
+		je alloddloop;	//if remainder = 1, jump to alloddloop
 
 	allevenloop:
-		//Adds even shirts to allShirts
-		mov ebx, allShirts;		//ebx=allShirts
-		add ebx, [esi];			//ebx=ebx+value in the array based on what iteration we are on
-		mov allShirts, ebx;		//allShirts=ebx
+		mov ebx, allShirts;	//ebx = allShirts
+		add ebx, [esi];		//ebx = ebx + value at current array element
+		mov allShirts, ebx;	//allShirts = ebx
 
-		//Adds even shirts to short sleeve?
-		mov ebx, sShirts;		//ebx=sShirts
-		add ebx, [esi];			//ebx=ebx+value in the array based on what iteration we are on
-		mov sShirts, ebx;		//sShirts=ebx
+		mov ebx, sShirts;	//ebx = sShirts
+		add ebx, [esi];		//ebx = ebx + current array value
+		mov sShirts, ebx;	//sShirts = ebx
 
-		add esi, 4;				//move forward four bytes to get the next element in the array
-
-		//reset loop
-		jmp allforloop;
+		add esi, 4;		//move esi to next element (next shirt)
+		jmp allforloop;	//repeat loop
 
 	alloddloop:
-		//This is adding the current array value to allShirts (how many long sleeves get added).
-		mov ebx, allShirts;		//ebx=allShirts
-		add ebx, [esi];			//ebx=ebx+[esi]
-		mov allShirts, ebx;		//allShirts=ebx
+		mov ebx, allShirts;	//ebx = allShirts
+		add ebx, [esi];		//add current value to total shirts
+		mov allShirts, ebx;	//allShirts = ebx
 
-		add esi, 4;				//move forward four bytes to get the next element in the array
-
-		//reset loop
-		jmp allforloop;
+		add esi, 4;		//move to next element
+		jmp allforloop;	//repeat loop
 
 	alldone:
 
-		//compute medium size shirts
-		//reset each variable
-		lea esi, [a];
-		mov ebx, 0;			//going to hold sum in ebx to do math in eax
-		mov i, 0;
+		//medium shirts
+		lea esi, [a];	//reset esi to address of a[0][0][0] again
+		mov ebx, 0;		//ebx = 0
+		mov i, 0;		//i = 0, loop counter
 
-		add esi, 8;			//set index to 2
-
+		add esi, 8;		//esi = start at index 2 (medium shirts)
 
 	mediumloop:
-		cmp i, 6;
-		je mediumdone;
+		cmp i, 6;		//compare i to 6 (number of medium shirts to sum)
+		je mediumdone;	//if i = 6, jump to medium done since we are done 
+//summing medium shirts
 
+		add ebx, [esi];	//add current medium shirt value to ebx
 
-		add ebx, [esi];
+		mov eax, i;		//eax = i
+		mov ecx, 2;		//ecx = 2
+		cwd;				
+		idiv ecx;			
 
-		mov eax, i;
-		mov ecx, 2
-			cwd;
-		idiv ecx;
-
-		inc i;
-
-		cmp edx, 1;			//if it is 1 than move to odd loop if it is even move to even loop
-		je oddloop;
-		//odd loop incrase esi by 4
-		//even loop increases esi by 20
+		inc i;				
+		cmp edx, 1;			
+		je oddloop;		//if the remainder is odd, jump to oddloop
 
 	evenloop:
-
-		add esi, 4;
-		jmp mediumloop;
+		add esi, 4;		//move pointer to next medium shirt 
+		jmp mediumloop;	//repeat loop
 
 	oddloop:
-
-		add esi, 20;
-		jmp mediumloop;
-
+		add esi, 20;	//skip to the next relevant medium shirt in memory
+		jmp mediumloop;	//repeat loop
 
 	mediumdone:
-		mov mShirts, ebx;
+		mov mShirts, ebx;	//store total medium shirts
 
-
-		//compute redx shirts
-		//reset each variable
-		lea esi, [a];
-		mov ebx, 0;			//going to hold sum in ebx to do math in eax
-		mov i, 0;
-
+		//red shirts
+		lea esi, [a];	//esi = address of the first element again
+		mov ebx, 0;		//ebx = 0
+		mov i, 0;		//i = 0
 
 	redloop:
-		cmp i, 6;
-		je reddone;
+		cmp i, 6;		//compare i to 6 (number of red shirts)
+		je reddone;		//if done, exit loop
 
-		add ebx, [esi];
-		add esi, 4;
+		add ebx, [esi];	//add current red shirt value to ebx
+		add esi, 4;		//move pointer to next element
+		inc i;			//increment i
+		jmp redloop;	//repeat loop
 
-		inc i;
-
-		jmp redloop;
 	reddone:
-		mov rshirts, ebx;
-
+		mov rshirts, ebx;	//store total red shirts
 	}
 
 	cout << endl;
@@ -301,5 +262,5 @@ int main3()
 	cout << "Medium size shirts: " << mShirts << endl;
 	cout << "Short sleeves shirts: " << sShirts << endl;
 	cout << "Red shirts: " << rshirts << endl;
-
 }
+//Q3 DONE
