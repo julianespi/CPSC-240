@@ -180,17 +180,13 @@ int main3()
 		idiv ecx;	//eax = quotient, edx = remainder (0 means even, 1 means odd)
 
 		inc i;		//one element covered, so increment i
-		cmp edx, 1;	//check remainder from division to see if i is odd or even
+		cmp edx, 0;	//check remainder from division to see if i is odd or even
 		je alloddloop;	//if remainder = 1, jump to alloddloop
 
 	allevenloop:
 		mov ebx, allShirts;	//ebx = allShirts
 		add ebx, [esi];		//ebx = ebx + value at current array element
 		mov allShirts, ebx;	//allShirts = ebx
-
-		mov ebx, sShirts;	//ebx = sShirts
-		add ebx, [esi];		//ebx = ebx + current array value
-		mov sShirts, ebx;	//sShirts = ebx
 
 		add esi, 4;		//move esi to next element (next shirt)
 		jmp allforloop;	//repeat loop
@@ -199,6 +195,10 @@ int main3()
 		mov ebx, allShirts;	//ebx = allShirts
 		add ebx, [esi];		//add current value to total shirts
 		mov allShirts, ebx;	//allShirts = ebx
+
+		mov ebx, sShirts;	//ebx = sShirts
+		add ebx, [esi];		//ebx = ebx + current array value
+		mov sShirts, ebx;	//sShirts = ebx
 
 		add esi, 4;		//move to next element
 		jmp allforloop;	//repeat loop
