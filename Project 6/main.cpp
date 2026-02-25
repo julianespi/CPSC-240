@@ -1,3 +1,4 @@
+#include <iostream>
 #include <iomanip>
 using namespace std;
 
@@ -26,39 +27,39 @@ void readData() {
 int main1() {
 
 	_asm {
-		call readData;
+    call readData;           
 
-		//Rectangle area
-		fld rectLength;
-		fld rectWidth;
-		fmul;
-		fstp rectArea;
+    //Rectangle area
+    fld rectLength;          //push rect length onto stack
+    fld rectWidth;           //push rect width onto stack
+    fmul;                    //multiply top two values on stack
+    fstp rectArea;           //pop result from stack to rect area
 
-		//Rectangle perimeter
-		fld rectLength;
-		fld two;
-		fmul;
-		fld rectWidth;
-		fld two;
-		fmul;
-		fadd;
-		fstp rectPerim;
+    //Rectangle perimeter
+    fld rectLength;          //push rect length onto stack
+    fld two;                 //push 2 onto stack
+    fmul;                    //multiply top two (2*length)
+    fld rectWidth;           //push rect width onto stack
+    fld two;                 //push 2 onto stack
+    fmul;                    //multiply top two (2*width)
+    fadd;                    //add top two values on stack (2*length + 2*width)
+    fstp rectPerim;          //pop result from stack to rect perimeter
 
-		//Triangle area
-		fld c;
-		fld h;
-		fmul;
-		fld two;
-		fdiv;
-		fstp triArea;
+    //Triangle area
+    fld c;                   //push base onto stack
+    fld h;                   //push height onto stack
+    fmul;                    //multiply them
+    fld two;                 //push 2 onto stack
+    fdiv;                    //divide by 2 (base*height / 2)
+    fstp triArea;            //pop result from stack to triangle area
 
-		//Triangle perimeter
-		fld a;
-		fld b;
-		fadd;
-		fld c;
-		fadd;
-		fstp triPerim;
+    //Triangle perimeter
+    fld a;                   //push side a onto stack
+    fld b;                   //push side b onto stack
+    fadd;                    //add top two values on stack (a + b)
+    fld c;                   //push side c onto stack
+    fadd;                    //add top two values on stack (a + b + c)
+    fstp triPerim;           //pop result from stack to triangle perimeter
 	}
 
 	cout << "  Triangle " << endl;
