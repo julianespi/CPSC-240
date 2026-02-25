@@ -1,58 +1,78 @@
-#include <iostream>
+#include <iomanip>
 using namespace std;
 
 int main1();
 int main2();
 
-
-int main()
-{
+int main() {
+	main1();
 	main2();
 }
 
-int main1()
-{
-	float a, b, c, h;
-	float tArea, tPerimeter;
-	float length, width;
-	float two = 2;
+//Question 1
+float triArea, triPerim, rectArea, rectPerim;
+float a, b, c, d, h;
+float two = 2;
+float rectLength;
+float rectWidth;
 
-	double d = 20.1;
-
-	cout << "Enter the values of a,b,c, and h for the triangle: ";
+void readData() {
+	cout << "Enter the values of a, b, c, and h for the triangle: ";
 	cin >> a >> b >> c >> h;
-
 	cout << "Enter the length and the width of the rectangle: ";
-	cin >> length >> width;
-
-	_asm
-	{
-		//find area and perimeter of tirangel and sqaure
-		fld h;
-		fld c;
-
-		fmul;
-
-		fld two;
-		fdiv;
-
-		fstp tArea;
-
-		fld a;
-		fld b;
-		fld c;
-
-		fadd;
-		fadd;
-
-		fstp tPerimeter;
-	}
-
-	cout << tArea;
-
-	return 0;
+	cin >> rectLength >> rectWidth;
 }
 
+int main1() {
+
+	_asm {
+		call readData;
+
+		//Rectangle area
+		fld rectLength;
+		fld rectWidth;
+		fmul;
+		fstp rectArea;
+
+		//Rectangle perimeter
+		fld rectLength;
+		fld two;
+		fmul;
+		fld rectWidth;
+		fld two;
+		fmul;
+		fadd;
+		fstp rectPerim;
+
+		//Triangle area
+		fld c;
+		fld h;
+		fmul;
+		fld two;
+		fdiv;
+		fstp triArea;
+
+		//Triangle perimeter
+		fld a;
+		fld b;
+		fadd;
+		fld c;
+		fadd;
+		fstp triPerim;
+	}
+
+	cout << "  Triangle " << endl;
+	cout << fixed << setprecision(2);
+	cout << "        Area............ " << triArea << endl;
+	cout << "        Perimeter......." << triPerim << endl; 
+
+	cout << "  Rectangle " << endl;
+	cout << "        Area............ " << rectArea << endl;
+	cout << "        Perimeter......." << rectPerim << endl;
+}
+//Q1 DONE
+
+//Question 2
 int main2()
 {
 
