@@ -6,7 +6,7 @@ int main1();
 int main2();
 
 int main() {
-	main1();
+	//main1();
 	main2();
 }
 
@@ -77,30 +77,93 @@ int main1() {
 int main2()
 {
 
-	float a = 2.1, b = 4.5, c = 1.7;
-	float answer; 
-	float four =4;
+	float a, b, c;
+	float x2; 
+	float x1;
+	float two = 2;
+	float four = 4;
+	float neg = -1;
+
+	cout << "To see the two real roots of aX^2+ bX + c=0, enter the a,b, and c values:  ";
+	cin >> a >> b >> c;
 	_asm
 	{
-		fld b;
-		fld b;
-
-		fmul; //b^2
-
-		fld four;
-		fld a;
-		fld c;
+		// calculate x2
+		fld b;		//b
+		fld neg;	//-1 b
 
 		fmul;
-		fmul;
-		fsub;
 
-		fstp answer;
+		fld b;		//b -b
+		fld b;		//b b -b
+
+		fmul;		//b^2 -b
+
+		fld four;	//4 b^2 -b 
+		fld a;		//a 4 b^2 -b
+		fld c;		//c a 4 b^2 -b
+
+		fmul;		//ac 4 b^2 -b 
+		fmul;		//4ac b^2 -b
+		fsub;		//b^2-4ac -b
+
+		fsqrt;		//\sqrt{b^2 - 4ac} -b
+
+		fld neg;	//-1 \sqrt{b^2 - 4ac} -b
+
+		fmul;		//-\sqrt{b^2 - 4ac} -b
+
+		fadd;		//-b-\sqrt{b^2 - 4ac}
+
+		fld two;	//2 -b-\sqrt{b^2 - 4ac}
+
+		fld a;		//a 2 -b-\sqrt{b^2 - 4ac}
+
+		fmul;		//2a -b-\sqrt{b^2 - 4ac}
+
+		fdiv;		//(-b-\sqrt{b^2 - 4ac})/(2a)
+
+		fstp x2;	//x2 = (-b-\sqrt{b^2 - 4ac})/(2a)
+
+		//calculate x1
+
+		fld b;		//b
+		fld neg;	// -1 b
+
+		fmul;
+
+		fld b;		//b -b
+		fld b;		//b b -b
+
+		fmul;		//b^2 -b
+
+		fld four;	// 4 b^2 -b 
+		fld a;		// a 4 b^2 -b
+		fld c;		// c a 4 b^2 -b
+
+		fmul;		//ac 4 b^2 -b 
+		fmul;		//4ac b^2 -b
+		fsub;		//b^2-4ac -b
+
+		fsqrt;		//\sqrt{b^2-4ac} -b
+
+		fadd;		//-b+\sqrt{b^2-4ac}
+
+		fld two;	//2 -b+\sqrt{b^2 - 4ac}
+
+		fld a;		//a 2 -b+\sqrt{b^2 - 4ac}
+
+		fmul;		//2a -b+\sqrt{b^2 - 4ac}
+
+		fdiv;		//(-b+\sqrt{b^2 - 4ac})/(2a)
+
+		fstp x1;	//x2 = (-b+\sqrt{b^2 - 4ac})/(2a)
 
 
 	}
 
-	cout << answer;
+	cout << fixed << setprecision(2) << endl;
+	cout << "X1: " << x1 << "  X2: " << x2 << endl;
 
 	return 0;
 }
