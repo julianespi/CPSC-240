@@ -6,7 +6,7 @@ int main1();
 int main2();
 
 int main() {
-	//main1();
+	main1();
 	main2();
 }
 
@@ -27,45 +27,45 @@ void readData() {
 int main1() {
 
 	_asm {
-    call readData;           
+		call readData;
 
-    //Rectangle area
-    fld rectLength;          //push rect length onto stack
-    fld rectWidth;           //push rect width onto stack
-    fmul;                    //multiply top two values on stack
-    fstp rectArea;           //pop result from stack to rect area
+		//Rectangle area
+		fld rectLength;          //push rect length onto stack
+		fld rectWidth;           //push rect width onto stack
+		fmul;                    //multiply top two values on stack
+		fstp rectArea;           //pop result from stack to rect area
 
-    //Rectangle perimeter
-    fld rectLength;          //push rect length onto stack
-    fld two;                 //push 2 onto stack
-    fmul;                    //multiply top two (2*length)
-    fld rectWidth;           //push rect width onto stack
-    fld two;                 //push 2 onto stack
-    fmul;                    //multiply top two (2*width)
-    fadd;                    //add top two values on stack (2*length + 2*width)
-    fstp rectPerim;          //pop result from stack to rect perimeter
+		//Rectangle perimeter
+		fld rectLength;          //push rect length onto stack
+		fld two;                 //push 2 onto stack
+		fmul;                    //multiply top two (2*length)
+		fld rectWidth;           //push rect width onto stack
+		fld two;                 //push 2 onto stack
+		fmul;                    //multiply top two (2*width)
+		fadd;                    //add top two values on stack (2*length + 2*width)
+		fstp rectPerim;          //pop result from stack to rect perimeter
 
-    //Triangle area
-    fld c;                   //push base onto stack
-    fld h;                   //push height onto stack
-    fmul;                    //multiply them
-    fld two;                 //push 2 onto stack
-    fdiv;                    //divide by 2 (base*height / 2)
-    fstp triArea;            //pop result from stack to triangle area
+		//Triangle area
+		fld c;                   //push base onto stack
+		fld h;                   //push height onto stack
+		fmul;                    //multiply them
+		fld two;                 //push 2 onto stack
+		fdiv;                    //divide by 2 (base*height / 2)
+		fstp triArea;            //pop result from stack to triangle area
 
-    //Triangle perimeter
-    fld a;                   //push side a onto stack
-    fld b;                   //push side b onto stack
-    fadd;                    //add top two values on stack (a + b)
-    fld c;                   //push side c onto stack
-    fadd;                    //add top two values on stack (a + b + c)
-    fstp triPerim;           //pop result from stack to triangle perimeter
+		//Triangle perimeter
+		fld a;                   //push side a onto stack
+		fld b;                   //push side b onto stack
+		fadd;                    //add top two values on stack (a + b)
+		fld c;                   //push side c onto stack
+		fadd;                    //add top two values on stack (a + b + c)
+		fstp triPerim;           //pop result from stack to triangle perimeter
 	}
 
 	cout << "  Triangle " << endl;
 	cout << fixed << setprecision(2);
 	cout << "        Area............ " << triArea << endl;
-	cout << "        Perimeter......." << triPerim << endl; 
+	cout << "        Perimeter......." << triPerim << endl;
 
 	cout << "  Rectangle " << endl;
 	cout << "        Area............ " << rectArea << endl;
@@ -78,7 +78,7 @@ int main2()
 {
 
 	float a, b, c;
-	float x2; 
+	float x2;
 	float x1;
 	float two = 2;
 	float four = 4;
@@ -92,7 +92,7 @@ int main2()
 		fld b;		//b
 		fld neg;	//-1 b
 
-		fmul;
+		fmul;		//-b
 
 		fld b;		//b -b
 		fld b;		//b b -b
@@ -128,9 +128,9 @@ int main2()
 		//calculate x1
 
 		fld b;		//b
-		fld neg;	// -1 b
+		fld neg;	//-1 b
 
-		fmul;
+		fmul;		//-b
 
 		fld b;		//b -b
 		fld b;		//b b -b
@@ -158,12 +158,11 @@ int main2()
 		fdiv;		//(-b+\sqrt{b^2 - 4ac})/(2a)
 
 		fstp x1;	//x2 = (-b+\sqrt{b^2 - 4ac})/(2a)
-
-
 	}
 
 	cout << fixed << setprecision(2) << endl;
-	cout << "X1: " << x1 << "  X2: " << x2 << endl;
+	cout << "X1= " << x1 << "  X2= " << x2 << endl;
 
 	return 0;
 }
+//Q2 DONE
